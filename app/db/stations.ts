@@ -76,7 +76,7 @@ export async function getStationGeometries(
   try {
     const result = await client.query<Station & { geometry: MultiPolygon }>(
       `SELECT ${fieldList},
-        ST_AsGeoJSON(geom, 5)::json AS geometry
+        ST_AsGeoJSON(geom, 5, 1)::json AS geometry
       FROM station
       ${whereClause.clause}`,
       whereClause.values
