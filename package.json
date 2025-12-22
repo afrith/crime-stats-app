@@ -4,8 +4,8 @@
   "type": "module",
   "scripts": {
     "build": "react-router build",
-    "dev": "react-router dev",
-    "start": "react-router-serve ./build/server/index.js",
+    "dev": "dotenv -- react-router dev --port 3000",
+    "start": "react-router-serve --port 3000 ./build/server/index.js",
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
@@ -27,6 +27,7 @@
     "@types/node": "^22",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
+    "dotenv-cli": "^11.0.0",
     "prettier": "^3.7.4",
     "typescript": "^5.9.2",
     "vite": "^7.1.7",
