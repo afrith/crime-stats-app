@@ -8,7 +8,7 @@
   "scripts": {
     "build": "react-router build",
     "dev": "dotenv -- react-router dev --port 3000",
-    "start": "react-router-serve --port 3000 ./build/server/index.js",
+    "start": "PORT=3000 react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
