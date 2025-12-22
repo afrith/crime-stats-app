@@ -2,12 +2,18 @@ import { Suspense, lazy, type FC } from "react";
 import { Await } from "react-router";
 import SpinnerFill from "~/display/spinner-fill";
 import type { FeatureCollection } from "geojson";
-
-const CrimeMap = lazy(async () => await import("./map/crimeMap"));
+import CrimeMap from "~/map/crimeMap.client";
+import ClientOnly from "./clientOnly";
 
 interface MapViewProps {
-  stationsPromise: Promise<FeatureCollection>;
+  stationsPromise?: Promise<FeatureCollection | undefined>;
 }
+
+const fallback = (
+  <SpinnerFill>
+    <span>Loading map...</span>
+  </SpinnerFill>
+);
 
 export default function MapView({ stationsPromise }: MapViewProps) {
   return (
@@ -18,16 +24,12 @@ export default function MapView({ stationsPromise }: MapViewProps) {
         </div>
         <div className="flex-grow-1 d-flex flex-row w-100">
           <div className="flex-grow-1 h-100" style={{ width: "65%" }}>
-            <Suspense
-              fallback={
-                <SpinnerFill>
-                  <span>Loading map...</span>
-                </SpinnerFill>
-              }
-            >
-              <Await resolve={stationsPromise}>
-                {(stations) => <CrimeMap stations={stations} />}
-              </Await>
+            <Suspense fallback={fallback}>
+              <ClientOnly fallback={fallback}>
+                <Await resolve={stationsPromise}>
+                  {(stations) => <CrimeMap stations={stations} />}
+                </Await>
+              </ClientOnly>
             </Suspense>
           </div>
           <div className="flex-grow-1" style={{ width: "35%" }} />

@@ -4,7 +4,7 @@ import type { FeatureCollection } from "geojson";
 import type { PathOptions } from "leaflet";
 
 interface CrimeMapProps {
-  stations: FeatureCollection;
+  stations?: FeatureCollection;
 }
 
 const geoJsonStyle: PathOptions = {
@@ -25,7 +25,7 @@ export default function CrimeMap({ stations }: CrimeMapProps) {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <GeoJSON data={stations} style={geoJsonStyle} />
+      {stations && <GeoJSON data={stations} style={geoJsonStyle} />}
     </MapContainer>
   );
 }
