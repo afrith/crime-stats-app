@@ -18,7 +18,7 @@ const fallback = (
 
 export default function MapView({ geomPromise }: MapViewProps) {
   return (
-    <main className="p-4 vh-100">
+    <main className="p-3 vh-100">
       <div className="d-flex flex-column h-100 gx-4">
         <div>
           <h1>Crime Stats SA</h1>
