@@ -1,6 +1,6 @@
 import { Suspense, lazy, type FC } from "react";
 import { Await } from "react-router";
-import { Spinner } from "react-bootstrap";
+import SpinnerFill from "~/display/spinner-fill";
 import type { FeatureCollection } from "geojson";
 
 const CrimeMap = lazy(async () => await import("./map/crimeMap"));
@@ -18,7 +18,13 @@ export default function MapView({ stationsPromise }: MapViewProps) {
         </div>
         <div className="flex-grow-1 d-flex flex-row w-100">
           <div className="flex-grow-1 h-100" style={{ width: "65%" }}>
-            <Suspense fallback={<Spinner animation="border" role="status" />}>
+            <Suspense
+              fallback={
+                <SpinnerFill>
+                  <span>Loading map...</span>
+                </SpinnerFill>
+              }
+            >
               <Await resolve={stationsPromise}>
                 {(stations) => <CrimeMap stations={stations} />}
               </Await>
