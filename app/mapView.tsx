@@ -1,10 +1,9 @@
 import { Suspense, lazy, type FC } from "react";
 import { Await } from "react-router";
 import SpinnerFill from "~/display/spinner-fill";
-import type { FeatureCollection } from "geojson";
 import CrimeMap from "~/map/crimeMap.client";
 import ClientOnly from "./clientOnly";
-import type { Station, StationCollection } from "./data/stations";
+import type { Station, StationCollection } from "./db/stations";
 
 interface MapViewProps {
   stations: Station[];

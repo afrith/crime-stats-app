@@ -1,6 +1,6 @@
 import type { Route } from "./+types/home";
 import MapView from "~/mapView";
-import { fetchStations, fetchStationGeometries } from "~/data/stations";
+import { getStations, getStationGeometries } from "~/db/stations";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -11,21 +11,10 @@ export function meta({}: Route.MetaArgs) {
 
 export async function loader() {
   return {
-    stations: await fetchStations(),
-    geomPromise: Promise.resolve(undefined),
+    stations: await getStations(),
+    geomPromise: getStationGeometries(),
   };
 }
-
-export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
-  const serverData = await serverLoader();
-  return {
-    ...serverData,
-    geomPromise: fetchStationGeometries(),
-  };
-}
-
-// force the client loader to run during hydration
-clientLoader.hydrate = true as const;
 
 export default function Home({ loaderData }: Route.ComponentProps) {
   const { stations, geomPromise } = loaderData;

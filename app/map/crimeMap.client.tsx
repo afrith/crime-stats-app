@@ -1,7 +1,7 @@
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
 import type { PathOptions } from "leaflet";
-import type { StationCollection } from "~/data/stations";
+import type { StationCollection } from "~/db/stations";
 
 interface CrimeMapProps {
   stations?: StationCollection;
