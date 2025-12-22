@@ -8,6 +8,7 @@ export interface Station {
   muni_code: string;
   prov_code: string;
   population: number;
+  area_km2: number;
 }
 
 export type StationCollection = FeatureCollection<MultiPolygon, Station>;
