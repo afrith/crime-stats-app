@@ -1,9 +1,9 @@
 import { Suspense } from "react";
 import { Await } from "react-router";
-import SpinnerFill from "~/display/spinner-fill";
-import CrimeMap from "~/map/crimeMap.client";
-import ClientOnly from "./clientOnly";
-import type { Station, StationCollection } from "./db/stations";
+import SpinnerFill from "~/utils/spinner-fill";
+import CrimeMap from "~/map/crime-map.client";
+import ClientOnly from "~/utils/client-only";
+import type { Station, StationCollection } from "~/db/stations";
 
 interface MapViewProps {
   stations: Station[];

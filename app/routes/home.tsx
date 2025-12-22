@@ -1,5 +1,5 @@
 import type { Route } from "./+types/home";
-import MapView from "~/mapView";
+import MapView from "~/map-view";
 import { getStations, getStationGeometries } from "~/db/stations";
 
 export function meta({}: Route.MetaArgs) {
