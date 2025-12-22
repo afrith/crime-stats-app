@@ -4,9 +4,11 @@ import SpinnerFill from "~/display/spinner-fill";
 import type { FeatureCollection } from "geojson";
 import CrimeMap from "~/map/crimeMap.client";
 import ClientOnly from "./clientOnly";
+import type { Station, StationCollection } from "./data/stations";
 
 interface MapViewProps {
-  stationsPromise?: Promise<FeatureCollection | undefined>;
+  stations: Station[];
+  geomPromise?: Promise<StationCollection | undefined>;
 }
 
 const fallback = (
@@ -15,7 +17,7 @@ const fallback = (
   </SpinnerFill>
 );
 
-export default function MapView({ stationsPromise }: MapViewProps) {
+export default function MapView({ geomPromise }: MapViewProps) {
   return (
     <main className="p-4 vh-100">
       <div className="d-flex flex-column h-100 gx-4">
@@ -26,7 +28,7 @@ export default function MapView({ stationsPromise }: MapViewProps) {
           <div className="flex-grow-1 h-100" style={{ width: "65%" }}>
             <Suspense fallback={fallback}>
               <ClientOnly fallback={fallback}>
-                <Await resolve={stationsPromise}>
+                <Await resolve={geomPromise}>
                   {(stations) => <CrimeMap stations={stations} />}
                 </Await>
               </ClientOnly>
