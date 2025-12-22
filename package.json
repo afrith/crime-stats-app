@@ -1,7 +1,7 @@
 {
   "name": "crime-stats-app",
   "version": "0.0.1",
-  "description": "Frontend for crimestats.frith.dev",
+  "description": "Web app for visualising crime statistics in South Africa",
   "author": "Adrian Frith <adrian@frith.dev>",
   "license": "MIT",
   "type": "module",
