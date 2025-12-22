@@ -1,4 +1,4 @@
-import { Suspense, lazy, type FC } from "react";
+import { Suspense } from "react";
 import { Await } from "react-router";
 import SpinnerFill from "~/display/spinner-fill";
 import CrimeMap from "~/map/crimeMap.client";
