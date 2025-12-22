@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { Await } from "react-router";
 import SpinnerFill from "~/utils/spinner-fill";
 import CrimeMap from "~/map/crime-map.client";
@@ -17,9 +17,12 @@ const fallback = (
 );
 
 export default function MapView({ geomPromise }: MapViewProps) {
+  const [selectedStation, setSelectedStation] = useState<Station | undefined>(
+    undefined
+  );
   return (
     <main className="p-3 vh-100">
-      <div className="d-flex flex-column h-100 gx-4">
+      <div className="d-flex flex-column h-100">
         <div>
           <h1>Crime Stats SA</h1>
         </div>
@@ -28,12 +31,25 @@ export default function MapView({ geomPromise }: MapViewProps) {
             <Suspense fallback={fallback}>
               <ClientOnly fallback={fallback}>
                 <Await resolve={geomPromise}>
-                  {(stations) => <CrimeMap stations={stations} />}
+                  {(stations) => (
+                    <CrimeMap
+                      stations={stations}
+                      onClick={(station) =>
+                        setSelectedStation(station?.properties)
+                      }
+                    />
+                  )}
                 </Await>
               </ClientOnly>
             </Suspense>
           </div>
-          <div className="flex-grow-1" style={{ width: "35%" }} />
+          <div className="flex-grow-1 ps-3" style={{ width: "35%" }}>
+            {selectedStation != null ? (
+              <h3>{selectedStation?.name}</h3>
+            ) : (
+              <p>Click a station on the map to see details here.</p>
+            )}
+          </div>
         </div>
       </div>
     </main>
