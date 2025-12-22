@@ -3,10 +3,7 @@ import MapView from "~/mapView";
 import { getStations, getStationGeometries } from "~/db/stations";
 
 export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "Crime Stats SA" },
-    { name: "description", content: "Welcome to React Router!" },
-  ];
+  return [{ title: "Crime Stats SA" }];
 }
 
 export async function loader() {
