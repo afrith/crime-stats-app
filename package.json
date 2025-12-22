@@ -1,6 +1,9 @@
 {
   "name": "crime-stats-app",
-  "private": true,
+  "version": "0.0.1",
+  "description": "Frontend for crimestats.frith.dev",
+  "author": "Adrian Frith <adrian@frith.dev>",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "build": "react-router build",
