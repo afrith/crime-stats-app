@@ -1,6 +1,7 @@
 import type { StationFeature } from "~/db/stations";
 import { Popup } from "react-map-gl/maplibre";
 import { Link } from "react-router";
+import { Table } from "react-bootstrap";
 
 interface StationPopupProps {
   feature: StationFeature;
@@ -20,9 +21,21 @@ export default function StationPopup({
       longitude={longitude}
       latitude={latitude}
     >
-      <div className="fw-bold">{feature.properties.name}</div>
+      <h4>{feature.properties.name}</h4>
+      <Table size="sm">
+        <tbody>
+          <tr>
+            <th>Population:</th>
+            <td>{feature.properties.population}</td>
+          </tr>
+          <tr>
+            <th>Area:</th>
+            <td>{feature.properties.area_km2} km²</td>
+          </tr>
+        </tbody>
+      </Table>
       <div>
-        <Link to={`/station/${feature.properties.slug}`}>View Details</Link>
+        <Link to={`/station/${feature.properties.slug}`}>See more&hellip;</Link>
       </div>
     </Popup>
   );
