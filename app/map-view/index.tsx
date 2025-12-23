@@ -1,5 +1,5 @@
 import { Suspense, useState } from "react";
-import { Await } from "react-router";
+import { Await, Link } from "react-router";
 import SpinnerFill from "~/utils/spinner-fill";
 import CrimeMap from "~/map/crime-map.client";
 import ClientOnly from "~/utils/client-only";
@@ -45,7 +45,14 @@ export default function MapView({ geomPromise }: MapViewProps) {
           </div>
           <div className="flex-grow-1 ps-3" style={{ width: "35%" }}>
             {selectedStation != null ? (
-              <h3>{selectedStation?.name}</h3>
+              <>
+                <h3>{selectedStation?.name}</h3>
+                <p>
+                  <Link to={`/station/${selectedStation.slug}`}>
+                    View details
+                  </Link>
+                </p>
+              </>
             ) : (
               <p>Click a station on the map to see details here.</p>
             )}
