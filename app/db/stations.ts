@@ -81,12 +81,14 @@ export async function getStationGeometries(
       ${whereClause.clause}`,
       whereClause.values
     );
-    const features: StationFeature[] = result.rows.map((row) => ({
-      type: "Feature",
-      id: row.id,
-      properties: row,
-      geometry: row.geometry,
-    }));
+    const features: StationFeature[] = result.rows.map(
+      ({ geometry, ...row }) => ({
+        type: "Feature",
+        id: row.id,
+        properties: row,
+        geometry: geometry,
+      })
+    );
     return {
       type: "FeatureCollection",
       features,
