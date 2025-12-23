@@ -1,6 +1,7 @@
-import { useCallback } from "react";
+import { useCallback, useState, useMemo } from "react";
 import Map, {
   Layer,
+  Popup,
   Source,
   type FillLayerSpecification,
   type LineLayerSpecification,
@@ -8,6 +9,7 @@ import Map, {
 } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import type { StationCollection, StationFeature } from "~/db/stations";
+import { pointOnFeature } from "@turf/turf";
 
 interface CrimeMapProps {
   stations: StationCollection;
@@ -41,14 +43,26 @@ const lineLayer: LineLayerSpecification = {
 const interactiveLayerIds = ["station-fills"];
 
 export default function CrimeMap({ stations, onClick }: CrimeMapProps) {
+  const [selectedFeature, setSelectedFeature] = useState<StationFeature | null>(
+    null
+  );
+
   const handleClick = useCallback((e: MapLayerMouseEvent) => {
     if (e?.features?.[0] == null) {
       onClick?.(undefined);
+      setSelectedFeature(null);
     } else {
-      const feature = e.features[0];
-      onClick?.(feature as unknown as StationFeature);
+      const feature = e.features[0] as unknown as StationFeature;
+      onClick?.(feature);
+      setSelectedFeature(feature);
     }
   }, []);
+
+  const [longitude, latitude] = useMemo(() => {
+    if (selectedFeature == null) return [0, 0];
+    const pt = pointOnFeature(selectedFeature);
+    return pt.geometry.coordinates as [number, number];
+  }, [selectedFeature]);
 
   return (
     <Map
@@ -66,6 +80,15 @@ export default function CrimeMap({ stations, onClick }: CrimeMapProps) {
         <Layer {...fillLayer} />
         <Layer {...lineLayer} />
       </Source>
+      {selectedFeature != null && (
+        <Popup
+          key={`popup-${selectedFeature.properties.slug}`}
+          longitude={longitude}
+          latitude={latitude}
+        >
+          {selectedFeature.properties.name}
+        </Popup>
+      )}
     </Map>
   );
 }
