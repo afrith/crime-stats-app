@@ -1,7 +1,6 @@
-import { useCallback, useState, useMemo } from "react";
+import { useCallback, useState } from "react";
 import Map, {
   Layer,
-  Popup,
   Source,
   type FillLayerSpecification,
   type LineLayerSpecification,
@@ -9,8 +8,7 @@ import Map, {
 } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import type { StationCollection, StationFeature } from "~/db/stations";
-import { pointOnFeature } from "@turf/turf";
-import { Link } from "react-router";
+import StationPopup from "./station-popup.client";
 
 interface CrimeMapProps {
   stations: StationCollection;
@@ -43,27 +41,32 @@ const lineLayer: LineLayerSpecification = {
 
 const interactiveLayerIds = ["station-fills"];
 
+interface ClickData {
+  feature: StationFeature;
+  latitude: number;
+  longitude: number;
+}
+
 export default function CrimeMap({ stations, onClick }: CrimeMapProps) {
-  const [selectedFeature, setSelectedFeature] = useState<StationFeature | null>(
-    null
+  const [clicked, setClicked] = useState<ClickData | null>(null);
+
+  const handleClick = useCallback(
+    (e: MapLayerMouseEvent) => {
+      if (e?.features?.[0] == null) {
+        onClick?.(undefined);
+        setClicked(null);
+      } else {
+        const feature = e.features[0] as unknown as StationFeature;
+        onClick?.(feature);
+        setClicked({
+          feature,
+          latitude: e.lngLat.lat,
+          longitude: e.lngLat.lng,
+        });
+      }
+    },
+    [onClick]
   );
-
-  const handleClick = useCallback((e: MapLayerMouseEvent) => {
-    if (e?.features?.[0] == null) {
-      onClick?.(undefined);
-      setSelectedFeature(null);
-    } else {
-      const feature = e.features[0] as unknown as StationFeature;
-      onClick?.(feature);
-      setSelectedFeature(feature);
-    }
-  }, []);
-
-  const [longitude, latitude] = useMemo(() => {
-    if (selectedFeature == null) return [0, 0];
-    const pt = pointOnFeature(selectedFeature);
-    return pt.geometry.coordinates as [number, number];
-  }, [selectedFeature]);
 
   return (
     <Map
@@ -81,20 +84,7 @@ export default function CrimeMap({ stations, onClick }: CrimeMapProps) {
         <Layer {...fillLayer} />
         <Layer {...lineLayer} />
       </Source>
-      {selectedFeature != null && (
-        <Popup
-          key={`popup-${selectedFeature.properties.slug}`}
-          longitude={longitude}
-          latitude={latitude}
-        >
-          <div className="fw-bold">{selectedFeature.properties.name}</div>
-          <div>
-            <Link to={`/station/${selectedFeature.properties.slug}`}>
-              View Details
-            </Link>
-          </div>
-        </Popup>
-      )}
+      {clicked != null && <StationPopup {...clicked} />}
     </Map>
   );
 }
