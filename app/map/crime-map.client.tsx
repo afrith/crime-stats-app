@@ -10,6 +10,7 @@ import Map, {
 import "maplibre-gl/dist/maplibre-gl.css";
 import type { StationCollection, StationFeature } from "~/db/stations";
 import { pointOnFeature } from "@turf/turf";
+import { Link } from "react-router";
 
 interface CrimeMapProps {
   stations: StationCollection;
@@ -86,7 +87,12 @@ export default function CrimeMap({ stations, onClick }: CrimeMapProps) {
           longitude={longitude}
           latitude={latitude}
         >
-          {selectedFeature.properties.name}
+          <div className="fw-bold">{selectedFeature.properties.name}</div>
+          <div>
+            <Link to={`/station/${selectedFeature.properties.slug}`}>
+              View Details
+            </Link>
+          </div>
         </Popup>
       )}
     </Map>
