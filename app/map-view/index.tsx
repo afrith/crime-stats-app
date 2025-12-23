@@ -7,7 +7,7 @@ import type { Station, StationCollection } from "~/db/stations";
 
 interface MapViewProps {
   stations: Station[];
-  geomPromise?: Promise<StationCollection | undefined>;
+  geomPromise: Promise<StationCollection>;
 }
 
 const fallback = (
