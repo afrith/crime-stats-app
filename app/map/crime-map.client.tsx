@@ -1,62 +1,70 @@
 import { useCallback } from "react";
-import "leaflet/dist/leaflet.css";
-import { MapContainer, TileLayer, GeoJSON, useMapEvent } from "react-leaflet";
-import type { PathOptions, Layer } from "leaflet";
+import Map, {
+  Layer,
+  Source,
+  type FillLayerSpecification,
+  type LineLayerSpecification,
+  type MapLayerMouseEvent,
+} from "react-map-gl/maplibre";
+import "maplibre-gl/dist/maplibre-gl.css";
 import type { StationCollection, StationFeature } from "~/db/stations";
 
 interface CrimeMapProps {
-  stations?: StationCollection;
+  stations: StationCollection;
   onClick?: (station?: StationFeature) => void;
 }
 
-const geoJsonStyle: PathOptions = {
-  color: "black",
-  weight: 1,
-  opacity: 1,
-  fill: true,
-  fillOpacity: 0,
+const fillLayer: FillLayerSpecification = {
+  id: "station-fills",
+  type: "fill",
+  source: "stations",
+  paint: {
+    "fill-opacity": 0,
+  },
 };
 
-export default function CrimeMap(props: CrimeMapProps) {
+const lineLayer: LineLayerSpecification = {
+  id: "station-lines",
+  type: "line",
+  source: "stations",
+  layout: {
+    "line-join": "round",
+    "line-cap": "round",
+  },
+  paint: {
+    "line-color": "#000",
+    "line-width": 2,
+  },
+};
+
+const interactiveLayerIds = ["station-fills"];
+
+export default function CrimeMap({ stations, onClick }: CrimeMapProps) {
+  const handleClick = useCallback((e: MapLayerMouseEvent) => {
+    if (e?.features?.[0] == null) {
+      onClick?.(undefined);
+    } else {
+      const feature = e.features[0];
+      onClick?.(feature as unknown as StationFeature);
+    }
+  }, []);
+
   return (
-    <MapContainer
-      center={[-28.5, 24.66667]}
-      zoom={6}
-      style={{ height: "100%", width: "100%" }}
+    <Map
+      initialViewState={{
+        longitude: 24.66667,
+        latitude: -28.5,
+        zoom: 5,
+      }}
+      style={{ width: "100%", height: "100%" }}
+      mapStyle="https://vector.openstreetmap.org/styles/shortbread/colorful.json"
+      onClick={handleClick}
+      interactiveLayerIds={interactiveLayerIds}
     >
-      <MapContent {...props} />
-    </MapContainer>
-  );
-}
-
-function MapContent({ stations, onClick }: CrimeMapProps) {
-  const handleEachFeature = useCallback(
-    (feature: StationFeature, layer: Layer) => {
-      layer.on("click", (event) => {
-        onClick?.(feature);
-      });
-    },
-    [onClick]
-  );
-
-  useMapEvent("click", () => {
-    onClick?.(undefined);
-  });
-
-  return (
-    <>
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      {stations && (
-        <GeoJSON
-          data={stations}
-          style={geoJsonStyle}
-          onEachFeature={handleEachFeature}
-          bubblingMouseEvents={false}
-        />
-      )}
-    </>
+      <Source id="stations" type="geojson" data={stations}>
+        <Layer {...fillLayer} />
+        <Layer {...lineLayer} />
+      </Source>
+    </Map>
   );
 }

@@ -1,50 +1,69 @@
-import { useEffect } from "react";
-import "leaflet/dist/leaflet.css";
-import { MapContainer, TileLayer, GeoJSON, useMap } from "react-leaflet";
-import type { PathOptions } from "leaflet";
+import { useRef, useEffect, useState } from "react";
+import Map, {
+  type MapRef,
+  Layer,
+  Source,
+  type FillLayerSpecification,
+  type LineLayerSpecification,
+} from "react-map-gl/maplibre";
+import "maplibre-gl/dist/maplibre-gl.css";
 import type { StationFeature } from "~/db/stations";
 
 interface StationMapProps {
   station: StationFeature;
 }
 
-const geoJsonStyle: PathOptions = {
-  color: "rgb(0, 79, 163)",
-  weight: 2,
-  opacity: 1,
-  fill: true,
+const fillLayer: FillLayerSpecification = {
+  id: "station-fill",
+  type: "fill",
+  source: "station",
+  paint: {
+    "fill-color": "rgb(0, 79, 163)",
+    "fill-opacity": 0.6,
+  },
 };
 
-export default function StationMap(props: StationMapProps) {
-  return (
-    <MapContainer
-      center={[-28.5, 24.66667]}
-      zoom={6}
-      style={{ height: "100%", width: "100%" }}
-    >
-      <MapContent {...props} />
-    </MapContainer>
-  );
-}
+const lineLayer: LineLayerSpecification = {
+  id: "station-line",
+  type: "line",
+  source: "station",
+  layout: {
+    "line-join": "round",
+    "line-cap": "round",
+  },
+  paint: {
+    "line-color": "rgb(0, 79, 163)",
+    "line-width": 2,
+  },
+};
 
-function MapContent({ station }: StationMapProps) {
-  const map = useMap();
+export default function StationMap({ station }: StationMapProps) {
+  const mapRef = useRef<MapRef>(null);
+  const [loaded, setLoaded] = useState(false);
+
   useEffect(() => {
-    if (station.geometry.bbox != null) {
-      const [west, south, east, north] = station.geometry.bbox;
-      map.fitBounds([
-        [south, west],
-        [north, east],
-      ]);
+    if (loaded && station.geometry.bbox != null && mapRef.current != null) {
+      const bbox = station.geometry.bbox as [number, number, number, number];
+      mapRef.current.fitBounds(bbox, { padding: 20, animate: false });
     }
-  }, [station]);
+  }, [loaded, station]);
+
   return (
-    <>
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <GeoJSON data={station} style={geoJsonStyle} />
-    </>
+    <Map
+      initialViewState={{
+        longitude: 24.66667,
+        latitude: -28.5,
+        zoom: 5,
+      }}
+      ref={mapRef}
+      style={{ width: "100%", height: "100%" }}
+      mapStyle="https://vector.openstreetmap.org/styles/shortbread/colorful.json"
+      onLoad={() => setLoaded(true)}
+    >
+      <Source id="station" type="geojson" data={station}>
+        <Layer {...fillLayer} />
+        <Layer {...lineLayer} />
+      </Source>
+    </Map>
   );
 }
