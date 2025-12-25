@@ -2,15 +2,18 @@ import type { StationFeature } from "~/db/stations";
 import { Popup } from "react-map-gl/maplibre";
 import { Link } from "react-router";
 import { Table } from "react-bootstrap";
+import type { CrimeStat } from "~/db/stats";
 
 interface StationPopupProps {
   feature: StationFeature;
+  stat?: CrimeStat;
   longitude: number;
   latitude: number;
 }
 
 export default function StationPopup({
   feature,
+  stat,
   longitude,
   latitude,
 }: StationPopupProps) {
@@ -22,7 +25,13 @@ export default function StationPopup({
       latitude={latitude}
     >
       <h4>{feature.properties.name}</h4>
-      <Table size="sm">
+
+      {stat && (
+        <p className="text-muted">
+          statistics for {stat.crimeSlug} in {stat.year}
+        </p>
+      )}
+      <Table size="sm" className="my-2">
         <tbody>
           <tr>
             <th>Population:</th>
@@ -32,6 +41,22 @@ export default function StationPopup({
             <th>Area:</th>
             <td>{feature.properties.area_km2} km²</td>
           </tr>
+          {stat && (
+            <>
+              <tr>
+                <th>Incidents:</th>
+                <td>{stat.count}</td>
+              </tr>
+              <tr>
+                <th>Per 100,000 people:</th>
+                <td>{stat.rate.toFixed(2)}</td>
+              </tr>
+              <tr>
+                <th>Per km²:</th>
+                <td>{stat.density.toFixed(2)}</td>
+              </tr>
+            </>
+          )}
         </tbody>
       </Table>
       <div>

@@ -1,15 +1,7 @@
 import { Form } from "react-bootstrap";
 import CrimeSelect from "./crime-select";
 import type { Crime } from "~/db/crimes";
-
-type Year = "2020" | "2021" | "2022" | "2023" | "2024" | "2025";
-type Measure = "count" | "rate" | "density";
-
-export interface MapOptions {
-  crimeSlug: string;
-  year: Year;
-  measure: Measure;
-}
+import type { MapOptions } from "./index";
 
 interface ControlPaneProps {
   crimes: Crime[];
@@ -37,7 +29,9 @@ export default function ControlPane({
         <Form.Label>Year:</Form.Label>
         <Form.Select
           value={options.year}
-          onChange={(e) => onOptionsChange({ year: e.target.value as Year })}
+          onChange={(e) =>
+            onOptionsChange({ year: e.target.value as MapOptions["year"] })
+          }
         >
           <option value="2020">2020</option>
           <option value="2021">2021</option>
@@ -53,7 +47,9 @@ export default function ControlPane({
         <Form.Select
           value={options.measure}
           onChange={(e) =>
-            onOptionsChange({ measure: e.target.value as Measure })
+            onOptionsChange({
+              measure: e.target.value as MapOptions["measure"],
+            })
           }
         >
           <option value="count">Count of crimes</option>

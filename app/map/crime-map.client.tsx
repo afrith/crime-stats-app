@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import Map, {
   Layer,
   Source,
@@ -9,9 +9,19 @@ import Map, {
 import "maplibre-gl/dist/maplibre-gl.css";
 import type { StationCollection, StationFeature } from "~/db/stations";
 import StationPopup from "./station-popup.client";
+import type { MapOptions } from "~/map-view";
+import type { CrimeStat } from "~/db/stats";
+
+interface ColoredStat extends CrimeStat {
+  color: string;
+}
 
 interface CrimeMapProps {
   stations: StationCollection;
+  options: MapOptions;
+  data?: ColoredStat[];
+  colors?: string[];
+  breakpoints?: number[];
   onClick?: (station?: StationFeature) => void;
 }
 
@@ -20,7 +30,8 @@ const fillLayer: FillLayerSpecification = {
   type: "fill",
   source: "stations",
   paint: {
-    "fill-opacity": 0,
+    "fill-color": ["get", "color"],
+    "fill-opacity": 0.5,
   },
 };
 
@@ -35,7 +46,7 @@ const lineLayer: LineLayerSpecification = {
   paint: {
     "line-color": "#666",
     "line-width": 1,
-    "line-opacity": 0.6,
+    "line-opacity": 1,
   },
 };
 
@@ -43,12 +54,35 @@ const interactiveLayerIds = ["station-fills"];
 
 interface ClickData {
   feature: StationFeature;
+  stat?: ColoredStat;
   latitude: number;
   longitude: number;
 }
 
-export default function CrimeMap({ stations, onClick }: CrimeMapProps) {
+function CrimeMap({ stations, data, onClick }: CrimeMapProps) {
   const [clicked, setClicked] = useState<ClickData | null>(null);
+
+  // this is a bit of a hack to force re-rendering the layer when data changes
+  const [keyCount, setKeyCount] = useState(0);
+  useEffect(() => {
+    setKeyCount((count) => count + 1);
+  }, [data]);
+
+  const stationsWithColors: StationCollection = {
+    ...stations,
+    features: stations.features.map((feature) => {
+      const stat = data?.find(
+        (s) => s.stationSlug === feature.properties?.slug
+      );
+      return {
+        ...feature,
+        properties: {
+          ...feature.properties,
+          color: stat?.color ?? "#ffffff",
+        },
+      };
+    }),
+  };
 
   const handleClick = useCallback(
     (e: MapLayerMouseEvent) => {
@@ -60,12 +94,13 @@ export default function CrimeMap({ stations, onClick }: CrimeMapProps) {
         onClick?.(feature);
         setClicked({
           feature,
+          stat: data?.find?.((s) => s.stationSlug === feature.properties.slug),
           latitude: e.lngLat.lat,
           longitude: e.lngLat.lng,
         });
       }
     },
-    [onClick]
+    [onClick, data]
   );
 
   return (
@@ -80,11 +115,17 @@ export default function CrimeMap({ stations, onClick }: CrimeMapProps) {
       onClick={handleClick}
       interactiveLayerIds={interactiveLayerIds}
     >
-      <Source id="stations" type="geojson" data={stations}>
-        <Layer {...fillLayer} />
+      <Source id="stations" type="geojson" data={stationsWithColors}>
+        <Layer
+          key={`data-${keyCount}`}
+          {...fillLayer}
+          beforeId="station-lines"
+        />
         <Layer {...lineLayer} />
       </Source>
       {clicked != null && <StationPopup {...clicked} />}
     </Map>
   );
 }
+
+export default memo(CrimeMap);
