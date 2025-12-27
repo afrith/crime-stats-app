@@ -1,21 +1,42 @@
-import type { StationFeature } from "~/db/stations";
+import type { StationDetails, StationFeature } from "~/db/stations";
 import StationMap from "~/map/station-map.client";
 import ClientOnly from "~/utils/client-only";
+import { Row, Col } from "react-bootstrap";
 
 interface StationViewProps {
-  station: StationFeature;
+  station: StationDetails;
+  feature: StationFeature;
 }
 
-export default function StationView({ station }: StationViewProps) {
-  const { name, prov_code } = station.properties;
+export default function StationView({ station, feature }: StationViewProps) {
+  const { name, former_name } = station;
   return (
     <main className="p-4">
-      <h2>Crime Stats for {name}</h2>
-      <div style={{ height: 400, maxWidth: 600 }}>
-        <ClientOnly>
-          <StationMap station={station} />
-        </ClientOnly>
-      </div>
+      <h2>
+        Crime Stats for {name}
+        {former_name ? (
+          <small className="text-muted"> (formerly {former_name})</small>
+        ) : (
+          ""
+        )}
+      </h2>
+      <Row>
+        <Col sm={12} md={6}>
+          <div style={{ height: 400 }}>
+            <ClientOnly>
+              <StationMap station={feature} />
+            </ClientOnly>
+          </div>
+        </Col>
+        <Col sm={12} md={6}>
+          <dl>
+            <dt>Population (Census 2022)</dt>
+            <dd>{station.population.toLocaleString("en-GB")} people</dd>
+            <dt>Area</dt>
+            <dd>{station.area_km2.toLocaleString("en-GB")} km²</dd>
+          </dl>
+        </Col>
+      </Row>
     </main>
   );
 }

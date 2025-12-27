@@ -3,31 +3,34 @@ import type { FeatureCollection, Feature, MultiPolygon } from "geojson";
 
 export interface Station {
   id: number;
-  code: string;
   slug: string;
   name: string;
-  dc_code: string;
-  muni_code: string;
-  prov_code: string;
   population: number;
   area_km2: number;
+}
+
+export interface StationDetails extends Station {
+  code: string;
+  former_name: string;
+  muni_code: string;
+  dc_code: string;
+  prov_code: string;
 }
 
 export type StationFeature = Feature<MultiPolygon, Station>;
 export type StationCollection = FeatureCollection<MultiPolygon, Station>;
 
-const fieldNames = [
-  "id",
-  "code",
-  "slug",
-  "name",
-  "dc_code",
-  "muni_code",
-  "prov_code",
-  "population",
-  "area_km2",
-];
+const fieldNames = ["id", "slug", "name", "population", "area_km2"];
 const fieldList = fieldNames.join(", ");
+
+const extraFieldNames = [
+  "code",
+  "former_name",
+  "muni_code",
+  "dc_code",
+  "prov_code",
+];
+const detailFieldList = [...fieldNames, ...extraFieldNames].join(", ");
 
 interface StationQueryParams {
   slug?: string;
@@ -93,6 +96,23 @@ export async function getStationGeometries(
       type: "FeatureCollection",
       features,
     };
+  } finally {
+    client.release();
+  }
+}
+
+export async function getStationDetails(
+  slug: string
+): Promise<StationDetails | null> {
+  const client = await pool.connect();
+  try {
+    const result = await client.query<StationDetails>(
+      `SELECT ${detailFieldList}
+      FROM station
+      WHERE slug = $1`,
+      [slug]
+    );
+    return result.rows[0] ?? null;
   } finally {
     client.release();
   }
