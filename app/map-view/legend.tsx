@@ -11,13 +11,7 @@ export default function Legend({ options, colors, breakpoints }: LegendProps) {
   return (
     <div className="mt-3">
       <h4>Legend</h4>
-      <Table>
-        <thead>
-          <tr>
-            <th />
-            <th>{measureLabels[options.measure]}</th>
-          </tr>
-        </thead>
+      <Table style={{ width: "auto" }}>
         <tbody>
           {breakpoints.map((bp, i) => {
             if (i === 0) return null;
@@ -41,10 +35,22 @@ export default function Legend({ options, colors, breakpoints }: LegendProps) {
                     &nbsp;
                   </div>
                 </td>
-                <td>
+                <td className="text-end">
                   {options.measure === "count"
-                    ? `${breakpoints[i - 1]} – ${bp}`
-                    : `${breakpoints[i - 1].toFixed(2)} – ${bp.toFixed(2)}`}
+                    ? breakpoints[i - 1].toLocaleString("en-GB")
+                    : breakpoints[i - 1].toLocaleString("en-GB", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                </td>
+                <td>&ndash;</td>
+                <td className="text-end">
+                  {options.measure === "count"
+                    ? bp.toLocaleString("en-GB")
+                    : bp.toLocaleString("en-GB", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
                 </td>
               </tr>
             );
