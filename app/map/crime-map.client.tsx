@@ -44,7 +44,7 @@ const lineLayer: LineLayerSpecification = {
     "line-cap": "round",
   },
   paint: {
-    "line-color": "#666",
+    "line-color": "#777777",
     "line-width": 1,
     "line-opacity": 1,
   },

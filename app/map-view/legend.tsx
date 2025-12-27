@@ -24,7 +24,23 @@ export default function Legend({ options, colors, breakpoints }: LegendProps) {
             const color = colors[i - 1];
             return (
               <tr key={color}>
-                <td style={{ backgroundColor: color, width: "50px" }}></td>
+                <td
+                  style={{
+                    width: "50px",
+                  }}
+                >
+                  <div
+                    style={{
+                      opacity: 0.5,
+                      backgroundColor: color,
+                      border: "1px solid #000",
+                      width: "100%",
+                      height: "100%",
+                    }}
+                  >
+                    &nbsp;
+                  </div>
+                </td>
                 <td>
                   {options.measure === "count"
                     ? `${breakpoints[i - 1]} – ${bp}`
