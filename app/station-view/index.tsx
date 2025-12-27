@@ -21,19 +21,42 @@ export default function StationView({ station, feature }: StationViewProps) {
         )}
       </h2>
       <Row>
-        <Col sm={12} md={6}>
+        <Col sm={12} md={8}>
           <div style={{ height: 400 }}>
             <ClientOnly>
               <StationMap station={feature} />
             </ClientOnly>
           </div>
         </Col>
-        <Col sm={12} md={6}>
-          <dl>
-            <dt>Population (Census 2022)</dt>
+        <Col sm={12} md={4}>
+          <dl className="fs-5">
+            <dt>Province</dt>
+            <dd>{station.prov_code}</dd>
+            {station.dc_code === station.muni_code ? (
+              <>
+                <dt>Municipality</dt>
+                <dd>{station.muni_code}</dd>
+              </>
+            ) : (
+              <>
+                <dt>District municipality</dt>
+                <dd>{station.dc_code}</dd>
+                <dt>Local municipality</dt>
+                <dd>{station.muni_code}</dd>
+              </>
+            )}
+            <dt>
+              Population <small className="text-muted">(Census 2022)</small>
+            </dt>
             <dd>{station.population.toLocaleString("en-GB")} people</dd>
             <dt>Area</dt>
-            <dd>{station.area_km2.toLocaleString("en-GB")} km²</dd>
+            <dd>
+              {station.area_km2.toLocaleString("en-GB", {
+                minimumFractionDigits: 1,
+                maximumFractionDigits: 1,
+              })}{" "}
+              km²
+            </dd>
           </dl>
         </Col>
       </Row>
