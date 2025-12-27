@@ -121,7 +121,7 @@ function CrimeMap({ stations, data, onClick }: CrimeMapProps) {
           {...fillLayer}
           beforeId="station-lines"
         />
-        <Layer {...lineLayer} />
+        <Layer {...lineLayer} beforeId="label-address-housenumber" />
       </Source>
       {clicked != null && <StationPopup {...clicked} />}
     </Map>
