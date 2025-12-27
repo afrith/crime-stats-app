@@ -35,25 +35,45 @@ export default function StationPopup({
         <tbody>
           <tr>
             <th>Population:</th>
-            <td>{feature.properties.population}</td>
+            <td className="text-end">
+              {feature.properties.population.toLocaleString("en-GB")}
+            </td>
           </tr>
           <tr>
             <th>Area:</th>
-            <td>{feature.properties.area_km2} km²</td>
+            <td className="text-end">
+              {feature.properties.area_km2.toLocaleString("en-GB", {
+                minimumFractionDigits: 1,
+                maximumFractionDigits: 1,
+              })}{" "}
+              km²
+            </td>
           </tr>
           {stat && (
             <>
               <tr>
                 <th>Incidents:</th>
-                <td>{stat.count}</td>
+                <td className="text-end">
+                  {stat.count.toLocaleString("en-GB")}
+                </td>
               </tr>
               <tr>
                 <th>Per 100,000 people:</th>
-                <td>{stat.rate.toFixed(2)}</td>
+                <td className="text-end">
+                  {stat.rate.toLocaleString("en-GB", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </td>
               </tr>
               <tr>
                 <th>Per km²:</th>
-                <td>{stat.density.toFixed(2)}</td>
+                <td className="text-end">
+                  {stat.density.toLocaleString("en-GB", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </td>
               </tr>
             </>
           )}
