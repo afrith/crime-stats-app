@@ -1,5 +1,5 @@
-import type { MapOptions } from "~/map-view";
 import { Table } from "react-bootstrap";
+import { type MapOptions, measureLabels } from "./map-options";
 
 interface LegendProps {
   options: MapOptions;
@@ -12,6 +12,12 @@ export default function Legend({ options, colors, breakpoints }: LegendProps) {
     <div className="mt-3">
       <h4>Legend</h4>
       <Table>
+        <thead>
+          <tr>
+            <th />
+            <th>{measureLabels[options.measure]}</th>
+          </tr>
+        </thead>
         <tbody>
           {breakpoints.map((bp, i) => {
             if (i === 0) return null;

@@ -9,6 +9,7 @@ import ControlPane from "./control-pane";
 import type { loader } from "~/routes/stats";
 import { calculateBreakpoints } from "~/utils/breakpoints";
 import Legend from "./legend";
+import type { MapOptions } from "./map-options";
 
 // OrRd from colorbrewer2.org
 const colorScheme = {
@@ -47,15 +48,6 @@ const colorScheme = {
     "#7f0000",
   ],
 };
-
-type Year = "2020" | "2021" | "2022" | "2023" | "2024" | "2025";
-type Measure = "count" | "rate" | "density";
-
-export interface MapOptions {
-  crimeSlug: string;
-  year: Year;
-  measure: Measure;
-}
 
 interface MapViewProps {
   stations: Station[];

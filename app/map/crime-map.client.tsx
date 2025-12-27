@@ -9,7 +9,7 @@ import Map, {
 import "maplibre-gl/dist/maplibre-gl.css";
 import type { StationCollection, StationFeature } from "~/db/stations";
 import StationPopup from "./station-popup.client";
-import type { MapOptions } from "~/map-view";
+import type { MapOptions } from "~/map-view/map-options";
 import type { CrimeStat } from "~/db/stats";
 
 interface ColoredStat extends CrimeStat {
