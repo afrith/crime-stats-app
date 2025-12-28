@@ -115,7 +115,7 @@ export default function MapView({
         <div>
           <h1>Crime Stats SA</h1>
         </div>
-        <Row className="map-view-row gx-4 gy-4">
+        <Row className="map-view-row gx-lg-4 gy-4 gy-lg-0">
           <Col className="map-col" md={8} sm={12}>
             <Suspense fallback={fallback}>
               <ClientOnly fallback={fallback}>
