@@ -1,17 +1,19 @@
 import { Suspense, useEffect, useState, useMemo } from "react";
 import { Await, useFetcher } from "react-router";
-import SpinnerFill from "~/utils/spinner-fill";
-import CrimeMap from "~/map/crime-map.client";
 import ClientOnly from "~/utils/client-only";
-import type { Station, StationCollection } from "~/db/stations";
-import type { Crime } from "~/db/crimes";
-import ControlPane from "./control-pane";
-import type { loader } from "~/routes/stats";
-import { calculateBreakpoints } from "~/utils/breakpoints";
-import Legend from "./legend";
+
 import type { MapOptions } from "./map-options";
+import CrimeMap from "~/map/crime-map.client";
+import ControlPane from "./control-pane";
+import Legend from "./legend";
+import SpinnerFill from "~/utils/spinner-fill";
 import { Row, Col } from "react-bootstrap";
 import "./map-view.css";
+
+import type { Station, StationCollection } from "~/db/stations";
+import type { Crime } from "~/db/crimes";
+import type { loader } from "~/routes/stats";
+import { calculateBreakpoints } from "~/utils/breakpoints";
 
 // OrRd from colorbrewer2.org
 const colorScheme = {
