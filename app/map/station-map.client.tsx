@@ -61,8 +61,8 @@ export default function StationMap({ station }: StationMapProps) {
       onLoad={() => setLoaded(true)}
     >
       <Source id="station" type="geojson" data={station}>
-        <Layer {...fillLayer} />
-        <Layer {...lineLayer} />
+        <Layer {...fillLayer} beforeId="station-line" />
+        <Layer {...lineLayer} beforeId="label-address-housenumber" />
       </Source>
     </Map>
   );
