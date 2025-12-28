@@ -10,8 +10,7 @@ import SpinnerFill from "~/utils/spinner-fill";
 import { Row, Col } from "react-bootstrap";
 import "./map-view.css";
 
-import type { Station, StationCollection } from "~/db/stations";
-import type { Crime } from "~/db/crimes";
+import type { Route } from "../routes/+types/home";
 import type { loader } from "~/routes/stats";
 import { calculateBreakpoints } from "~/utils/breakpoints";
 
@@ -53,12 +52,6 @@ const colorScheme = {
   ],
 };
 
-interface MapViewProps {
-  stations: Station[];
-  crimes: Crime[];
-  geomPromise: Promise<StationCollection>;
-}
-
 const fallback = (
   <SpinnerFill>
     <span>Loading map...</span>
@@ -67,9 +60,8 @@ const fallback = (
 
 export default function MapView({
   crimes,
-  stations,
   geomPromise,
-}: MapViewProps) {
+}: Route.ComponentProps["loaderData"]) {
   const [options, setOptions] = useState<MapOptions>({
     crimeSlug: "murder",
     year: "2024",

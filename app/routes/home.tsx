@@ -1,6 +1,6 @@
 import type { Route } from "./+types/home";
 import MapView from "~/map-view";
-import { getStations, getStationGeometries } from "~/db/stations";
+import { getStationGeometries } from "~/db/stations";
 import { getCrimes } from "~/db/crimes";
 
 export function meta({}: Route.MetaArgs) {
@@ -8,10 +8,8 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export async function loader() {
-  const [stations, crimes] = await Promise.all([getStations(), getCrimes()]);
   return {
-    stations,
-    crimes,
+    crimes: await getCrimes(),
     geomPromise: getStationGeometries(),
   };
 }
