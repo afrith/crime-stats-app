@@ -1,16 +1,12 @@
-import type { StationDetails, StationFeature } from "~/db/stations";
+import type { Route } from "../routes/+types/station";
 import StationMap from "~/map/station-map.client";
 import ClientOnly from "~/utils/client-only";
 import { Row, Col } from "react-bootstrap";
 import StationInfo from "./station-info";
 
-interface StationViewProps {
-  station: StationDetails;
-  feature: StationFeature;
-}
-
-export default function StationView({ station, feature }: StationViewProps) {
-  const { name, former_name } = station;
+export default function StationView(props: Route.ComponentProps["loaderData"]) {
+  const { station } = props;
+  const { name, former_name } = station.properties;
   return (
     <main className="p-4">
       <h2>
@@ -23,12 +19,12 @@ export default function StationView({ station, feature }: StationViewProps) {
         <Col sm={12} md={8}>
           <div style={{ height: 400 }}>
             <ClientOnly>
-              <StationMap station={feature} />
+              <StationMap station={station} />
             </ClientOnly>
           </div>
         </Col>
         <Col sm={12} md={4}>
-          <StationInfo station={station} />
+          <StationInfo station={station.properties} />
         </Col>
       </Row>
     </main>

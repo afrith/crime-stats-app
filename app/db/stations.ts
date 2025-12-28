@@ -115,11 +115,14 @@ export async function getStationGeometries(
 
 export async function getStationDetails(
   slug: string
-): Promise<StationDetails | null> {
+): Promise<Feature<MultiPolygon, StationDetails> | null> {
   const client = await pool.connect();
   try {
-    const result = await client.query<StationDetails>(
-      `SELECT ${detailFieldList}
+    const result = await client.query<
+      StationDetails & { geometry: MultiPolygon }
+    >(
+      `SELECT ${detailFieldList},
+        ST_AsGeoJSON(geom_simp, 4, 1)::json AS geometry
       FROM station
         JOIN province ON station.prov_code = province.prov_code
         JOIN district_muni ON station.dc_code = district_muni.dc_code
@@ -127,7 +130,19 @@ export async function getStationDetails(
       WHERE slug = $1`,
       [slug]
     );
-    return result.rows[0] ?? null;
+
+    if (result.rows.length === 0) {
+      return null;
+    }
+
+    const { geometry, ...properties } = result.rows[0];
+
+    return {
+      type: "Feature",
+      geometry,
+      id: properties.id,
+      properties,
+    };
   } finally {
     client.release();
   }

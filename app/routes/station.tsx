@@ -1,22 +1,20 @@
 import { data } from "react-router";
 import type { Route } from "./+types/station";
-import { getStationDetails, getStationGeometries } from "~/db/stations";
+import { getStationDetails } from "~/db/stations";
 import StationView from "~/station-view";
 
 export async function loader({ params }: Route.LoaderArgs) {
   const station = await getStationDetails(params.stationSlug);
-  const geoms = await getStationGeometries({ slug: params.stationSlug });
-  if (station == null || geoms.features.length === 0) {
+  if (station == null) {
     throw data("Station Not Found", { status: 404 });
   }
-  return { station, feature: geoms.features[0] };
+  return { station };
 }
 
 export function meta({ loaderData }: Route.MetaArgs) {
-  return [{ title: `Crime Stats: ${loaderData.station.name}` }];
+  return [{ title: `Crime Stats: ${loaderData.station.properties.name}` }];
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  const { station, feature } = loaderData;
-  return <StationView station={station} feature={feature} />;
+  return <StationView {...loaderData} />;
 }
