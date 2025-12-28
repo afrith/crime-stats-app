@@ -1,4 +1,5 @@
 import type { StationDetails } from "~/db/stations";
+import { formatInt, formatFloat } from "~/utils/format";
 
 export default function StationInfo({ station }: { station: StationDetails }) {
   return (
@@ -21,15 +22,9 @@ export default function StationInfo({ station }: { station: StationDetails }) {
       <dt>
         Population <small className="text-muted">(Census 2022)</small>
       </dt>
-      <dd>{station.population.toLocaleString("en-GB")} people</dd>
+      <dd>{formatInt(station.population)} people</dd>
       <dt>Area</dt>
-      <dd>
-        {station.area_km2.toLocaleString("en-GB", {
-          minimumFractionDigits: 1,
-          maximumFractionDigits: 1,
-        })}{" "}
-        km²
-      </dd>
+      <dd>{formatFloat(station.area_km2, 1)} km²</dd>
     </dl>
   );
 }

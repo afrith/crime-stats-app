@@ -3,6 +3,7 @@ import { Popup } from "react-map-gl/maplibre";
 import { Link } from "react-router";
 import { Table } from "react-bootstrap";
 import type { CrimeStat } from "~/db/stats";
+import { formatInt, formatFloat } from "~/utils/format";
 
 interface StationPopupProps {
   feature: StationFeature;
@@ -36,44 +37,28 @@ export default function StationPopup({
           <tr>
             <th>Population:</th>
             <td className="text-end">
-              {feature.properties.population.toLocaleString("en-GB")}
+              {formatInt(feature.properties.population)}
             </td>
           </tr>
           <tr>
             <th>Area:</th>
             <td className="text-end">
-              {feature.properties.area_km2.toLocaleString("en-GB", {
-                minimumFractionDigits: 1,
-                maximumFractionDigits: 1,
-              })}{" "}
-              km²
+              {formatFloat(feature.properties.area_km2, 1)} km²
             </td>
           </tr>
           {stat && (
             <>
               <tr>
                 <th>Incidents:</th>
-                <td className="text-end">
-                  {stat.count.toLocaleString("en-GB")}
-                </td>
+                <td className="text-end">{formatInt(stat.count)}</td>
               </tr>
               <tr>
                 <th>Per 100,000 people:</th>
-                <td className="text-end">
-                  {stat.rate.toLocaleString("en-GB", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
-                </td>
+                <td className="text-end">{formatFloat(stat.rate, 2)}</td>
               </tr>
               <tr>
                 <th>Per km²:</th>
-                <td className="text-end">
-                  {stat.density.toLocaleString("en-GB", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
-                </td>
+                <td className="text-end">{formatFloat(stat.density, 2)}</td>
               </tr>
             </>
           )}

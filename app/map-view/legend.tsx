@@ -1,5 +1,6 @@
 import { Table } from "react-bootstrap";
 import { type MapOptions } from "~/utils/map-options";
+import { formatInt, formatFloat } from "~/utils/format";
 
 interface LegendProps {
   options: MapOptions;
@@ -16,6 +17,29 @@ export default function Legend({ options, colors, breakpoints }: LegendProps) {
           {breakpoints.map((bp, i) => {
             if (i === 0) return null;
             const color = colors[i - 1];
+
+            const start = breakpoints[i - 1];
+            const end =
+              options.measure === "count" && i < breakpoints.length - 1
+                ? bp - 1
+                : bp;
+
+            let text = "";
+
+            if (options.measure === "count") {
+              if (start === end) {
+                text = formatInt(end);
+              } else {
+                text = `${formatInt(start)} – ${formatInt(end)}`;
+              }
+            } else {
+              if (start === end) {
+                text = formatFloat(end);
+              } else {
+                text = `${formatFloat(start)} – ${formatFloat(end)}`;
+              }
+            }
+
             return (
               <tr key={color}>
                 <td
@@ -35,23 +59,7 @@ export default function Legend({ options, colors, breakpoints }: LegendProps) {
                     &nbsp;
                   </div>
                 </td>
-                <td className="text-end">
-                  {options.measure === "count"
-                    ? breakpoints[i - 1].toLocaleString("en-GB")
-                    : breakpoints[i - 1].toLocaleString("en-GB", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}
-                </td>
-                <td>&ndash;</td>
-                <td className="text-end">
-                  {options.measure === "count"
-                    ? bp.toLocaleString("en-GB")
-                    : bp.toLocaleString("en-GB", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}
-                </td>
+                <td>{text}</td>
               </tr>
             );
           })}

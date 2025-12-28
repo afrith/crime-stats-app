@@ -1,6 +1,7 @@
 import { Table } from "react-bootstrap";
 import type { Crime } from "~/db/crimes";
 import type { CrimeStat } from "~/db/stats";
+import { formatInt } from "~/utils/format";
 import { yearOptions, yearLabels } from "~/utils/map-options";
 
 interface CrimeTableProps {
@@ -73,9 +74,9 @@ function CrimeRow(props: CrimeRowProps) {
         </td>
         {yearOptions.map((year) => (
           <td key={`${currentCrime.slug}-stat-${year}`} className="text-end">
-            {(
+            {formatInt(
               currentStats.find((s) => `${s.year}` === year)?.count ?? 0
-            ).toLocaleString("en-GB")}
+            )}
           </td>
         ))}
       </tr>
