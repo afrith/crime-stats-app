@@ -132,12 +132,12 @@ function CrimeMap({ stations, data, onClick }: CrimeMapProps) {
       interactiveLayerIds={interactiveLayerIds}
     >
       <Source id="stations" type="geojson" data={stationsWithColors}>
+        <Layer {...lineLayer} beforeId="label-address-housenumber" />
         <Layer
           key={`data-${keyCount}`}
           {...fillLayer}
           beforeId="station-lines"
         />
-        <Layer {...lineLayer} beforeId="label-address-housenumber" />
       </Source>
       {clicked != null && <StationPopup {...clicked} />}
     </Map>
