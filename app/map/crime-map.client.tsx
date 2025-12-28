@@ -12,6 +12,12 @@ import type { StationCollection, StationFeature } from "~/db/stations";
 import StationPopup from "./station-popup.client";
 import type { MapOptions } from "~/utils/map-options";
 import type { CrimeStat } from "~/db/stats";
+import { colorful } from "@versatiles/style";
+
+const baseStyle = colorful({
+  baseUrl: "https://tiles.versatiles.org",
+  language: "en",
+});
 
 interface ColoredStat extends CrimeStat {
   color: string;
@@ -126,7 +132,7 @@ function CrimeMap({ stations, data, onClick }: CrimeMapProps) {
       }}
       ref={mapRef}
       style={{ width: "100%", height: "100%" }}
-      mapStyle="https://vector.openstreetmap.org/styles/shortbread/colorful.json"
+      mapStyle={baseStyle}
       onLoad={() => setLoaded(true)}
       onClick={handleClick}
       interactiveLayerIds={interactiveLayerIds}
