@@ -1,5 +1,5 @@
 import { Table } from "react-bootstrap";
-import { type MapOptions, measureLabels } from "./map-options";
+import { type MapOptions } from "~/utils/map-options";
 
 interface LegendProps {
   options: MapOptions;

@@ -2,7 +2,7 @@ import { Suspense, useEffect, useState, useMemo } from "react";
 import { Await, useFetcher } from "react-router";
 import ClientOnly from "~/utils/client-only";
 
-import type { MapOptions } from "./map-options";
+import type { MapOptions } from "~/utils/map-options";
 import CrimeMap from "~/map/crime-map.client";
 import ControlPane from "./control-pane";
 import Legend from "./legend";
