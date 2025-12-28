@@ -10,6 +10,8 @@ import type { loader } from "~/routes/stats";
 import { calculateBreakpoints } from "~/utils/breakpoints";
 import Legend from "./legend";
 import type { MapOptions } from "./map-options";
+import { Row, Col } from "react-bootstrap";
+import "./map-view.css";
 
 // OrRd from colorbrewer2.org
 const colorScheme = {
@@ -106,13 +108,13 @@ export default function MapView({
   }, [fetcher.data?.stats, options.measure]);
 
   return (
-    <main className="p-3 vh-100">
-      <div className="d-flex flex-column h-100">
+    <main className="p-3 map-view">
+      <div className="map-view-container">
         <div>
           <h1>Crime Stats SA</h1>
         </div>
-        <div className="flex-grow-1 d-flex flex-row w-100 overflow-hidden">
-          <div className="flex-grow-1 h-100" style={{ width: "65%" }}>
+        <Row className="map-view-row gx-4 gy-4">
+          <Col className="map-col" md={8} sm={12}>
             <Suspense fallback={fallback}>
               <ClientOnly fallback={fallback}>
                 <Await resolve={geomPromise}>
@@ -126,11 +128,8 @@ export default function MapView({
                 </Await>
               </ClientOnly>
             </Suspense>
-          </div>
-          <div
-            className="flex-grow-1 ps-3 overflow-y-auto"
-            style={{ width: "35%" }}
-          >
+          </Col>
+          <Col className="control-col" md={4} sm={12}>
             <ControlPane
               crimes={crimes}
               options={options}
@@ -145,8 +144,8 @@ export default function MapView({
                 colors={colors}
               />
             )}
-          </div>
-        </div>
+          </Col>
+        </Row>
       </div>
     </main>
   );
