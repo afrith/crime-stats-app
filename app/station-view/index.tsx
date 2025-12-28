@@ -3,9 +3,10 @@ import StationMap from "~/map/station-map.client";
 import ClientOnly from "~/utils/client-only";
 import { Row, Col } from "react-bootstrap";
 import StationInfo from "./station-info";
+import { CrimeTable } from "./crime-table";
 
 export default function StationView(props: Route.ComponentProps["loaderData"]) {
-  const { station } = props;
+  const { station, crimes, stats } = props;
   const { name, former_name } = station.properties;
   return (
     <main className="p-4">
@@ -27,6 +28,9 @@ export default function StationView(props: Route.ComponentProps["loaderData"]) {
           <StationInfo station={station.properties} />
         </Col>
       </Row>
+      <div className="pt-4">
+        <CrimeTable crimes={crimes} stats={stats} />
+      </div>
     </main>
   );
 }
