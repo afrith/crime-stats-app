@@ -91,6 +91,7 @@ export default function MapView({
           return colors[i - 1];
         }
       }
+      return colors[colors.length - 1];
     };
 
     const coloredData = fetcher.data.stats.map((stat) => ({
