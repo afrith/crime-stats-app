@@ -19,7 +19,7 @@ const fillLayer: FillLayerSpecification = {
   source: "station",
   paint: {
     "fill-color": "rgb(0, 79, 163)",
-    "fill-opacity": 0.6,
+    "fill-opacity": 0.25,
   },
 };
 
