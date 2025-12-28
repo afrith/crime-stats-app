@@ -14,10 +14,8 @@ export default function StationView({ station, feature }: StationViewProps) {
     <main className="p-4">
       <h2>
         Crime Stats for {name}
-        {former_name ? (
+        {former_name && (
           <small className="text-muted"> (formerly {former_name})</small>
-        ) : (
-          ""
         )}
       </h2>
       <Row>
