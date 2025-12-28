@@ -29,20 +29,20 @@ export default function StationView({ station, feature }: StationViewProps) {
           </div>
         </Col>
         <Col sm={12} md={4}>
-          <dl className="fs-5">
+          <dl>
             <dt>Province</dt>
-            <dd>{station.prov_code}</dd>
+            <dd>{station.prov_name}</dd>
             {station.dc_code === station.muni_code ? (
               <>
                 <dt>Municipality</dt>
-                <dd>{station.muni_code}</dd>
+                <dd>{station.muni_name}</dd>
               </>
             ) : (
               <>
                 <dt>District municipality</dt>
-                <dd>{station.dc_code}</dd>
+                <dd>{station.dc_name}</dd>
                 <dt>Local municipality</dt>
-                <dd>{station.muni_code}</dd>
+                <dd>{station.muni_name}</dd>
               </>
             )}
             <dt>

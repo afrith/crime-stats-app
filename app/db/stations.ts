@@ -13,22 +13,34 @@ export interface StationDetails extends Station {
   code: string;
   former_name: string;
   muni_code: string;
+  muni_name: string;
   dc_code: string;
+  dc_name: string;
   prov_code: string;
+  prov_name: string;
 }
 
 export type StationFeature = Feature<MultiPolygon, Station>;
 export type StationCollection = FeatureCollection<MultiPolygon, Station>;
 
-const fieldNames = ["id", "slug", "name", "population", "area_km2"];
+const fieldNames = [
+  "station.id",
+  "station.slug",
+  "station.name",
+  "station.population",
+  "station.area_km2",
+];
 const fieldList = fieldNames.join(", ");
 
 const extraFieldNames = [
-  "code",
-  "former_name",
-  "muni_code",
-  "dc_code",
-  "prov_code",
+  "station.code",
+  "station.former_name",
+  "station.muni_code",
+  "local_muni.muni_name",
+  "station.dc_code",
+  "district_muni.dc_name",
+  "station.prov_code",
+  "province.prov_name",
 ];
 const detailFieldList = [...fieldNames, ...extraFieldNames].join(", ");
 
@@ -109,6 +121,9 @@ export async function getStationDetails(
     const result = await client.query<StationDetails>(
       `SELECT ${detailFieldList}
       FROM station
+        JOIN province ON station.prov_code = province.prov_code
+        JOIN district_muni ON station.dc_code = district_muni.dc_code
+        JOIN local_muni ON station.muni_code = local_muni.muni_code
       WHERE slug = $1`,
       [slug]
     );
