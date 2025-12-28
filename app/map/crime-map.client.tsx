@@ -1,5 +1,6 @@
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState, useRef } from "react";
 import Map, {
+  type MapRef,
   Layer,
   Source,
   type FillLayerSpecification,
@@ -60,7 +61,17 @@ interface ClickData {
 }
 
 function CrimeMap({ stations, data, onClick }: CrimeMapProps) {
-  const [clicked, setClicked] = useState<ClickData | null>(null);
+  // Fit map to South Africa bbox on load
+  const mapRef = useRef<MapRef>(null);
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    if (loaded && mapRef.current != null) {
+      mapRef.current.fitBounds([16.45, -34.83333, 32.9, -22.13333], {
+        padding: 20,
+        animate: true,
+      });
+    }
+  }, [loaded]);
 
   // this is a bit of a hack to force re-rendering the layer when data changes
   const [keyCount, setKeyCount] = useState(0);
@@ -68,6 +79,7 @@ function CrimeMap({ stations, data, onClick }: CrimeMapProps) {
     setKeyCount((count) => count + 1);
   }, [data]);
 
+  // Augment stations with color property from data
   const stationsWithColors: StationCollection = {
     ...stations,
     features: stations.features.map((feature) => {
@@ -84,6 +96,8 @@ function CrimeMap({ stations, data, onClick }: CrimeMapProps) {
     }),
   };
 
+  // handle clicking on map features
+  const [clicked, setClicked] = useState<ClickData | null>(null);
   const handleClick = useCallback(
     (e: MapLayerMouseEvent) => {
       if (e?.features?.[0] == null) {
@@ -108,10 +122,12 @@ function CrimeMap({ stations, data, onClick }: CrimeMapProps) {
       initialViewState={{
         longitude: 24.66667,
         latitude: -28.5,
-        zoom: 5,
+        zoom: 4,
       }}
+      ref={mapRef}
       style={{ width: "100%", height: "100%" }}
       mapStyle="https://vector.openstreetmap.org/styles/shortbread/colorful.json"
+      onLoad={() => setLoaded(true)}
       onClick={handleClick}
       interactiveLayerIds={interactiveLayerIds}
     >
