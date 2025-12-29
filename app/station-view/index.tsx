@@ -4,12 +4,16 @@ import ClientOnly from "~/utils/client-only";
 import { Row, Col } from "react-bootstrap";
 import StationInfo from "./station-info";
 import { CrimeTable } from "./crime-table";
+import { Link } from "react-router";
 
 export default function StationView(props: Route.ComponentProps["loaderData"]) {
   const { station, crimes, stats } = props;
   const { name, former_name } = station.properties;
   return (
     <main className="p-4">
+      <p>
+        <Link to="/">&larr; Back to map</Link>
+      </p>
       <h2>
         Crime Stats for {name}
         {former_name && (
