@@ -46,6 +46,7 @@ const detailFieldList = [...fieldNames, ...extraFieldNames].join(", ");
 
 interface StationQueryParams {
   slug?: string;
+  provCode?: string;
 }
 
 function buildWhereClause(params: StationQueryParams): {
@@ -58,6 +59,11 @@ function buildWhereClause(params: StationQueryParams): {
   if (params.slug) {
     conditions.push(`slug = $${values.length + 1}`);
     values.push(params.slug);
+  }
+
+  if (params.provCode) {
+    conditions.push(`prov_code = $${values.length + 1}`);
+    values.push(params.provCode);
   }
 
   const clause =

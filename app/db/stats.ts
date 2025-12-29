@@ -12,6 +12,7 @@ export interface CrimeStat {
 
 interface Params {
   crimeSlug?: string;
+  provCode?: string;
   stationSlug?: string;
   year?: number;
   groupBy?: "station" | "muni" | "district" | "province";
@@ -24,6 +25,11 @@ export async function getAnnualStats(params: Params): Promise<CrimeStat[]> {
   if (params.crimeSlug) {
     conditions.push(`crime.slug = $${values.length + 1}`);
     values.push(params.crimeSlug);
+  }
+
+  if (params.provCode) {
+    conditions.push(`station.prov_code = $${values.length + 1}`);
+    values.push(params.provCode);
   }
 
   if (params.stationSlug) {
