@@ -28,7 +28,7 @@ export const yearLabels: Record<Year, string> = {
   "2022": "2022",
   "2023": "2023",
   "2024": "2024",
-  "2025": "2025 (Jan – Jun)",
+  "2025": "2025 (Jan – Sep)",
 };
 
 export const measureOptions: Measure[] = ["count", "rate", "density"];
