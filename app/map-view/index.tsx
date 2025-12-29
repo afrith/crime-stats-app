@@ -103,35 +103,33 @@ export default function MapView({
   }, [fetcher.data?.stats, options.measure]);
 
   return (
-    <main className="p-3 map-view">
-      <div className="map-view-container">
-        <div>
-          <h1>Crime Stats SA</h1>
-        </div>
-        <Row className="map-view-row gx-lg-4 gy-4 gy-lg-0">
-          <Col className="map-col" md={8} sm={12}>
-            <ClientOnly fallback={fallback}>
-              <CrimeMap geomPromise={geomPromise} data={coloredData} />
-            </ClientOnly>
-          </Col>
-          <Col className="control-col" md={4} sm={12}>
-            <ControlPane
-              crimes={crimes}
-              options={options}
-              onOptionsChange={(newOptions) =>
-                setOptions((prev) => ({ ...prev, ...newOptions }))
-              }
-            />
-            {breakpoints != null && colors != null && (
-              <Legend
-                options={options}
-                breakpoints={breakpoints}
-                colors={colors}
-              />
-            )}
-          </Col>
-        </Row>
+    <main className="p-3">
+      <div>
+        <h1>Crime Stats SA</h1>
       </div>
+      <Row className="gx-lg-4 gy-4 gy-lg-0">
+        <Col md={8} sm={12} className="map-container">
+          <ClientOnly fallback={fallback}>
+            <CrimeMap geomPromise={geomPromise} data={coloredData} />
+          </ClientOnly>
+        </Col>
+        <Col md={4} sm={12}>
+          <ControlPane
+            crimes={crimes}
+            options={options}
+            onOptionsChange={(newOptions) =>
+              setOptions((prev) => ({ ...prev, ...newOptions }))
+            }
+          />
+          {breakpoints != null && colors != null && (
+            <Legend
+              options={options}
+              breakpoints={breakpoints}
+              colors={colors}
+            />
+          )}
+        </Col>
+      </Row>
     </main>
   );
 }

@@ -1,31 +1,11 @@
 @media (min-width: 769px) {
-  main.map-view {
-    height: 100vh;
-  }
-
-  .map-view-container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .map-view-row {
-    overflow-y: hidden;
-    flex-grow: 1;
-  }
-
-  .map-col {
-    height: 100%;
-  }
-
-  .control-col {
-    height: 100%;
-    overflow-y: auto;
+  .map-container {
+    height: 700px;
   }
 }
 
-@media (max-width: 769px) {
-  .map-col {
+@media (max-width: 768px) {
+  .map-container {
     height: 500px;
   }
 }
