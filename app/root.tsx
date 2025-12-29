@@ -23,7 +23,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <div className="container-fluid">{children}</div>
+        <div className="container-fluid p-4">
+          {children}
+        </div>
         <ScrollRestoration />
         <Scripts />
       </body>

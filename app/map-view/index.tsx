@@ -130,7 +130,7 @@ export default function MapView(props: MapViewProps) {
   );
 
   return (
-    <main className="p-3">
+    <main>
       <div>
         <h1>Crime Stats: {structure?.name ?? "South Africa"}</h1>
       </div>
