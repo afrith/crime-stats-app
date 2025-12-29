@@ -12,11 +12,14 @@ export default function StationView(props: Route.ComponentProps["loaderData"]) {
   return (
     <main className="p-4">
       <Breadcrumb>
-        <Breadcrumb.Item>
-          <Link to="/">Home</Link>
+        <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/" }}>
+          Home
         </Breadcrumb.Item>
-        <Breadcrumb.Item>
-          <Link to={`/province/${prov_code}`}>{prov_name}</Link>
+        <Breadcrumb.Item
+          linkAs={Link}
+          linkProps={{ to: `/province/${prov_code}` }}
+        >
+          {prov_name}
         </Breadcrumb.Item>
         <Breadcrumb.Item active>{name}</Breadcrumb.Item>
       </Breadcrumb>
