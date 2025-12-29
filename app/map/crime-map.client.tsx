@@ -60,12 +60,6 @@ const lineLayer: LineLayerSpecification = {
 
 const interactiveLayerIds = ["station-fills"];
 
-const fallback = (
-  <SpinnerFill>
-    <span style={{ zIndex: 1000 }}>Loading map&hellip;</span>
-  </SpinnerFill>
-);
-
 interface ClickData {
   feature: StationFeature;
   stat?: ColoredStat;
@@ -114,9 +108,9 @@ function CrimeMap({ geomPromise, data, onClick }: CrimeMapProps) {
       interactiveLayerIds={interactiveLayerIds}
     >
       {isNavigating ? (
-        fallback
+        <SpinnerFill />
       ) : (
-        <Suspense fallback={fallback}>
+        <Suspense fallback={<SpinnerFill />}>
           <Await resolve={geomPromise}>
             {(stations) => (
               <DataLayers stations={stations} data={data} mapRef={mapRef} />
@@ -140,7 +134,7 @@ function DataLayers({ stations, data, mapRef }: DataLayersProps) {
   useEffect(() => {
     if (mapRef.current != null) {
       const bounds = bbox(stations) as [number, number, number, number];
-      mapRef.current.fitBounds(bounds, { padding: 20, animate: true });
+      mapRef.current.fitBounds(bounds, { padding: 20, animate: false });
     }
   }, [stations]);
 

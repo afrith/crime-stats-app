@@ -56,12 +56,6 @@ const colorScheme = {
   ],
 };
 
-const fallback = (
-  <SpinnerFill>
-    <span>Loading map&hellip;</span>
-  </SpinnerFill>
-);
-
 interface MapViewProps {
   crimes: Crime[];
   provinces: Province[];
@@ -157,7 +151,7 @@ export default function MapView(props: MapViewProps) {
       </div>
       <Row className="gx-lg-4 gy-4 gy-lg-0">
         <Col md={8} sm={12} className="map-container">
-          <ClientOnly fallback={fallback}>
+          <ClientOnly fallback={<SpinnerFill />}>
             <CrimeMap
               key={`map-${structure?.code ?? "ZA"}`}
               geomPromise={geomPromise}

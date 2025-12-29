@@ -1,17 +1,29 @@
+import { memo } from "react";
 import { Spinner } from "react-bootstrap";
 
-export default function SpinnerFill({
-  children,
-}: {
-  children?: React.ReactNode;
-}) {
+function SpinnerFill() {
   return (
-    <div className="w-100 h-100 d-flex justify-content-center align-items-center bg-light">
+    <div
+      style={{
+        position: "relative",
+        width: "100%",
+        height: "100%",
+        backgroundColor: "var(--bs-light)",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        zIndex: 1000,
+        fontFamily: "var(--bs-font-sans-serif)",
+        fontSize: "16pt",
+      }}
+    >
       <Spinner animation="border" role="status">
         <span className="visually-hidden">Loading...</span>
       </Spinner>
       &nbsp;
-      {children}
+      <span>Loading map&hellip;</span>
     </div>
   );
 }
+
+export default memo(SpinnerFill);
