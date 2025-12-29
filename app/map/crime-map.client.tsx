@@ -130,14 +130,12 @@ interface DataLayersProps {
 
 function DataLayers({ stations, data, mapRef }: DataLayersProps) {
   // fit map to the bounds of the geojson once it loads
-  const [zoomed, setZoomed] = useState(false);
   useEffect(() => {
-    if (!zoomed && mapRef.current != null) {
+    if (mapRef.current != null) {
       const bounds = bbox(stations) as [number, number, number, number];
       mapRef.current.fitBounds(bounds, { padding: 20, animate: true });
-      setZoomed(true);
     }
-  }, [zoomed, stations]);
+  }, [stations]);
 
   // this is a bit of a hack to force re-rendering the layer when data changes
   const [keyCount, setKeyCount] = useState(0);
