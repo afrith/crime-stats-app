@@ -14,6 +14,7 @@ import type { StationCollection, StationFeature } from "~/db/stations";
 import StationPopup from "./station-popup.client";
 import type { CrimeStat } from "~/db/stats";
 import { baseStyle } from "./base-style.client";
+import bbox from "@turf/bbox";
 
 interface ColoredStat extends CrimeStat {
   color: string;
@@ -66,17 +67,7 @@ interface ClickData {
 }
 
 function CrimeMap({ geomPromise, data, onClick }: CrimeMapProps) {
-  // Fit map to South Africa bbox on load
   const mapRef = useRef<MapRef>(null);
-  const [loaded, setLoaded] = useState(false);
-  useEffect(() => {
-    if (loaded && mapRef.current != null) {
-      mapRef.current.fitBounds([16.45, -34.83333, 32.9, -22.13333], {
-        padding: 20,
-        animate: true,
-      });
-    }
-  }, [loaded]);
 
   // handle clicking on map features
   const [clicked, setClicked] = useState<ClickData | null>(null);
@@ -109,13 +100,14 @@ function CrimeMap({ geomPromise, data, onClick }: CrimeMapProps) {
       ref={mapRef}
       style={{ width: "100%", height: "100%" }}
       mapStyle={baseStyle}
-      onLoad={() => setLoaded(true)}
       onClick={handleClick}
       interactiveLayerIds={interactiveLayerIds}
     >
       <Suspense fallback={fallback}>
         <Await resolve={geomPromise}>
-          {(stations) => <DataLayers stations={stations} data={data} />}
+          {(stations) => (
+            <DataLayers stations={stations} data={data} mapRef={mapRef} />
+          )}
         </Await>
       </Suspense>
       {clicked != null && <StationPopup {...clicked} />}
@@ -126,9 +118,20 @@ function CrimeMap({ geomPromise, data, onClick }: CrimeMapProps) {
 interface DataLayersProps {
   stations: StationCollection;
   data?: ColoredStat[];
+  mapRef: React.RefObject<MapRef | null>;
 }
 
-function DataLayers({ stations, data }: DataLayersProps) {
+function DataLayers({ stations, data, mapRef }: DataLayersProps) {
+  // fit map to the bounds of the geojson once it loads
+  const [zoomed, setZoomed] = useState(false);
+  useEffect(() => {
+    if (!zoomed && mapRef.current != null) {
+      const bounds = bbox(stations) as [number, number, number, number];
+      mapRef.current.fitBounds(bounds, { padding: 20, animate: true });
+      setZoomed(true);
+    }
+  }, [zoomed, stations]);
+
   // this is a bit of a hack to force re-rendering the layer when data changes
   const [keyCount, setKeyCount] = useState(0);
   useEffect(() => {
