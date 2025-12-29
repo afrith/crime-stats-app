@@ -10,6 +10,7 @@ import {
 import type { Route } from "./+types/root";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./app.css";
+import Footer from "./footer";
 
 export const links: Route.LinksFunction = () => [];
 
@@ -25,6 +26,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <div className="container-fluid p-4">
           {children}
+          <Footer />
         </div>
         <ScrollRestoration />
         <Scripts />
