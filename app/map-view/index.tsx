@@ -90,7 +90,13 @@ export default function MapView(props: MapViewProps) {
       params.append(structure.type, structure.code);
     }
     fetcher.load(`/stats/annual?${params.toString()}`);
-  }, [options.crimeSlug, options.year, fetcher.load]);
+  }, [
+    options.crimeSlug,
+    options.year,
+    structure?.type,
+    structure?.code,
+    fetcher.load,
+  ]);
 
   const { breakpoints, colors, coloredData } = useMemo(() => {
     if (fetcher.data?.stats == null) {
