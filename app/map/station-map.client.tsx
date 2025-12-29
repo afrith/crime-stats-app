@@ -8,6 +8,7 @@ import Map, {
 } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import type { StationFeature } from "~/db/stations";
+import { baseStyle } from "./base-style.client";
 
 interface StationMapProps {
   station: StationFeature;
@@ -57,7 +58,7 @@ export default function StationMap({ station }: StationMapProps) {
       }}
       ref={mapRef}
       style={{ width: "100%", height: "100%" }}
-      mapStyle="https://vector.openstreetmap.org/styles/shortbread/colorful.json"
+      mapStyle={baseStyle}
       onLoad={() => setLoaded(true)}
     >
       <Source id="station" type="geojson" data={station}>

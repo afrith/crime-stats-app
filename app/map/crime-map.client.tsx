@@ -12,12 +12,7 @@ import type { StationCollection, StationFeature } from "~/db/stations";
 import StationPopup from "./station-popup.client";
 import type { MapOptions } from "~/utils/map-options";
 import type { CrimeStat } from "~/db/stats";
-import { colorful } from "@versatiles/style";
-
-const baseStyle = colorful({
-  baseUrl: "https://tiles.versatiles.org",
-  language: "en",
-});
+import { baseStyle } from "./base-style.client";
 
 interface ColoredStat extends CrimeStat {
   color: string;
