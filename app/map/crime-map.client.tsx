@@ -6,7 +6,7 @@ import {
   useRef,
   useMemo,
 } from "react";
-import { Await } from "react-router";
+import { Await, useNavigation } from "react-router";
 import Map, {
   type MapRef,
   Layer,
@@ -97,6 +97,9 @@ function CrimeMap({ geomPromise, data, onClick }: CrimeMapProps) {
     [onClick, data]
   );
 
+  const navigation = useNavigation();
+  const isNavigating = Boolean(navigation.location);
+
   return (
     <Map
       initialViewState={{
@@ -110,13 +113,17 @@ function CrimeMap({ geomPromise, data, onClick }: CrimeMapProps) {
       onClick={handleClick}
       interactiveLayerIds={interactiveLayerIds}
     >
-      <Suspense fallback={fallback}>
-        <Await resolve={geomPromise}>
-          {(stations) => (
-            <DataLayers stations={stations} data={data} mapRef={mapRef} />
-          )}
-        </Await>
-      </Suspense>
+      {isNavigating ? (
+        fallback
+      ) : (
+        <Suspense fallback={fallback}>
+          <Await resolve={geomPromise}>
+            {(stations) => (
+              <DataLayers stations={stations} data={data} mapRef={mapRef} />
+            )}
+          </Await>
+        </Suspense>
+      )}
       {clicked != null && <StationPopup {...clicked} />}
     </Map>
   );
