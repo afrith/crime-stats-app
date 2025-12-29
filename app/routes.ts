@@ -8,5 +8,5 @@ import {
 export default [
   index("routes/home.tsx"),
   route("station/:stationSlug", "routes/station.tsx"),
-  ...prefix("stats", [route("annual/:crimeSlug/:year", "routes/stats.tsx")]),
+  ...prefix("stats", [route("annual", "routes/stats.tsx")]),
 ] satisfies RouteConfig;

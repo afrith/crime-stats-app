@@ -73,7 +73,10 @@ export default function MapView({
   const fetcher = useFetcher<typeof loader>();
 
   useEffect(() => {
-    fetcher.load(`/stats/annual/${options.crimeSlug}/${options.year}`);
+    const params = new URLSearchParams();
+    params.append("crime", options.crimeSlug);
+    params.append("year", options.year);
+    fetcher.load(`/stats/annual?${params.toString()}`);
   }, [options.crimeSlug, options.year, fetcher.load]);
 
   const { breakpoints, colors, coloredData } = useMemo(() => {
