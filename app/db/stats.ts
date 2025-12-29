@@ -1,4 +1,3 @@
-import { group } from "console";
 import { pool } from "./pool.server";
 
 export interface CrimeStat {
