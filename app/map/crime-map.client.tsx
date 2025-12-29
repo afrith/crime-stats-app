@@ -1,4 +1,11 @@
-import { Suspense, useCallback, useEffect, useState, useRef } from "react";
+import {
+  Suspense,
+  useCallback,
+  useEffect,
+  useState,
+  useRef,
+  useMemo,
+} from "react";
 import { Await } from "react-router";
 import Map, {
   type MapRef,
@@ -136,27 +143,30 @@ function DataLayers({ stations, data, mapRef }: DataLayersProps) {
   const [keyCount, setKeyCount] = useState(0);
   useEffect(() => {
     setKeyCount((count) => count + 1);
-  }, [data]);
+  }, [stations, data]);
 
   // Augment stations with color property from data
-  const stationsWithColors: StationCollection | undefined =
-    data != null
-      ? {
-          ...stations,
-          features: stations.features.map((feature) => {
-            const stat = data.find(
-              (s) => s.stationSlug === feature.properties?.slug
-            );
-            return {
-              ...feature,
-              properties: {
-                ...feature.properties,
-                color: stat?.color ?? "#ffffff",
-              },
-            };
-          }),
-        }
-      : stations;
+  const stationsWithColors: StationCollection | undefined = useMemo(
+    () =>
+      data != null
+        ? {
+            ...stations,
+            features: stations.features.map((feature) => {
+              const stat = data.find(
+                (s) => s.stationSlug === feature.properties?.slug
+              );
+              return {
+                ...feature,
+                properties: {
+                  ...feature.properties,
+                  color: stat?.color ?? "#ffffff",
+                },
+              };
+            }),
+          }
+        : stations,
+    [stations, data]
+  );
 
   return (
     <Source id="stations" type="geojson" data={stationsWithColors}>
