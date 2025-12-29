@@ -190,6 +190,7 @@ export default function MapView(props: MapViewProps) {
         </Col>
       </Row>
       <div className="pt-4">
+        <h4>Crime totals</h4>
         {isNavigating ? (
           <Placeholder as="p" animation="wave" className="mx-2">
             <Placeholder size="lg" xs={12} />
