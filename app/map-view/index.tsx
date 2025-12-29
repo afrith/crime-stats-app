@@ -5,7 +5,7 @@ import ClientOnly from "~/utils/client-only";
 import type { MapOptions } from "~/utils/map-options";
 import CrimeMap from "~/map/crime-map.client";
 import ControlPane from "./control-pane";
-import { CrimeTable } from "~/station-view/crime-table";
+import { CrimeTable } from "~/crime-table";
 import Legend from "./legend";
 import SpinnerFill from "~/utils/spinner-fill";
 import { Row, Col } from "react-bootstrap";
