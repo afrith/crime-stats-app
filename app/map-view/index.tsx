@@ -1,5 +1,5 @@
-import { Suspense, useEffect, useState, useMemo } from "react";
-import { Await, useFetcher } from "react-router";
+import { useEffect, useState, useMemo } from "react";
+import { useFetcher } from "react-router";
 import ClientOnly from "~/utils/client-only";
 
 import type { MapOptions } from "~/utils/map-options";
@@ -54,7 +54,7 @@ const colorScheme = {
 
 const fallback = (
   <SpinnerFill>
-    <span>Loading map...</span>
+    <span>Loading map&hellip;</span>
   </SpinnerFill>
 );
 
@@ -110,19 +110,9 @@ export default function MapView({
         </div>
         <Row className="map-view-row gx-lg-4 gy-4 gy-lg-0">
           <Col className="map-col" md={8} sm={12}>
-            <Suspense fallback={fallback}>
-              <ClientOnly fallback={fallback}>
-                <Await resolve={geomPromise}>
-                  {(stations) => (
-                    <CrimeMap
-                      stations={stations}
-                      options={options}
-                      data={coloredData}
-                    />
-                  )}
-                </Await>
-              </ClientOnly>
-            </Suspense>
+            <ClientOnly fallback={fallback}>
+              <CrimeMap geomPromise={geomPromise} data={coloredData} />
+            </ClientOnly>
           </Col>
           <Col className="control-col" md={4} sm={12}>
             <ControlPane

@@ -1,4 +1,5 @@
-import { memo, useCallback, useEffect, useState, useRef } from "react";
+import { Suspense, useCallback, useEffect, useState, useRef } from "react";
+import { Await } from "react-router";
 import Map, {
   type MapRef,
   Layer,
@@ -8,9 +9,9 @@ import Map, {
   type MapLayerMouseEvent,
 } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
+import SpinnerFill from "~/utils/spinner-fill";
 import type { StationCollection, StationFeature } from "~/db/stations";
 import StationPopup from "./station-popup.client";
-import type { MapOptions } from "~/utils/map-options";
 import type { CrimeStat } from "~/db/stats";
 import { baseStyle } from "./base-style.client";
 
@@ -19,11 +20,8 @@ interface ColoredStat extends CrimeStat {
 }
 
 interface CrimeMapProps {
-  stations: StationCollection;
-  options: MapOptions;
+  geomPromise: Promise<StationCollection>;
   data?: ColoredStat[];
-  colors?: string[];
-  breakpoints?: number[];
   onClick?: (station?: StationFeature) => void;
 }
 
@@ -54,6 +52,12 @@ const lineLayer: LineLayerSpecification = {
 
 const interactiveLayerIds = ["station-fills"];
 
+const fallback = (
+  <SpinnerFill>
+    <span style={{ zIndex: 1000 }}>Loading map&hellip;</span>
+  </SpinnerFill>
+);
+
 interface ClickData {
   feature: StationFeature;
   stat?: ColoredStat;
@@ -61,7 +65,7 @@ interface ClickData {
   longitude: number;
 }
 
-function CrimeMap({ stations, data, onClick }: CrimeMapProps) {
+function CrimeMap({ geomPromise, data, onClick }: CrimeMapProps) {
   // Fit map to South Africa bbox on load
   const mapRef = useRef<MapRef>(null);
   const [loaded, setLoaded] = useState(false);
@@ -73,29 +77,6 @@ function CrimeMap({ stations, data, onClick }: CrimeMapProps) {
       });
     }
   }, [loaded]);
-
-  // this is a bit of a hack to force re-rendering the layer when data changes
-  const [keyCount, setKeyCount] = useState(0);
-  useEffect(() => {
-    setKeyCount((count) => count + 1);
-  }, [data]);
-
-  // Augment stations with color property from data
-  const stationsWithColors: StationCollection = {
-    ...stations,
-    features: stations.features.map((feature) => {
-      const stat = data?.find(
-        (s) => s.stationSlug === feature.properties?.slug
-      );
-      return {
-        ...feature,
-        properties: {
-          ...feature.properties,
-          color: stat?.color ?? "#ffffff",
-        },
-      };
-    }),
-  };
 
   // handle clicking on map features
   const [clicked, setClicked] = useState<ClickData | null>(null);
@@ -132,17 +113,54 @@ function CrimeMap({ stations, data, onClick }: CrimeMapProps) {
       onClick={handleClick}
       interactiveLayerIds={interactiveLayerIds}
     >
-      <Source id="stations" type="geojson" data={stationsWithColors}>
-        <Layer {...lineLayer} beforeId="label-address-housenumber" />
-        <Layer
-          key={`data-${keyCount}`}
-          {...fillLayer}
-          beforeId="station-lines"
-        />
-      </Source>
+      <Suspense fallback={fallback}>
+        <Await resolve={geomPromise}>
+          {(stations) => <DataLayers stations={stations} data={data} />}
+        </Await>
+      </Suspense>
       {clicked != null && <StationPopup {...clicked} />}
     </Map>
   );
 }
 
-export default memo(CrimeMap);
+interface DataLayersProps {
+  stations: StationCollection;
+  data?: ColoredStat[];
+}
+
+function DataLayers({ stations, data }: DataLayersProps) {
+  // this is a bit of a hack to force re-rendering the layer when data changes
+  const [keyCount, setKeyCount] = useState(0);
+  useEffect(() => {
+    setKeyCount((count) => count + 1);
+  }, [data]);
+
+  // Augment stations with color property from data
+  const stationsWithColors: StationCollection | undefined =
+    data != null
+      ? {
+          ...stations,
+          features: stations.features.map((feature) => {
+            const stat = data.find(
+              (s) => s.stationSlug === feature.properties?.slug
+            );
+            return {
+              ...feature,
+              properties: {
+                ...feature.properties,
+                color: stat?.color ?? "#ffffff",
+              },
+            };
+          }),
+        }
+      : stations;
+
+  return (
+    <Source id="stations" type="geojson" data={stationsWithColors}>
+      <Layer {...lineLayer} beforeId="label-address-housenumber" />
+      <Layer key={`data-${keyCount}`} {...fillLayer} beforeId="station-lines" />
+    </Source>
+  );
+}
+
+export default CrimeMap;
