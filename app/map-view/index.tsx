@@ -158,7 +158,11 @@ export default function MapView(props: MapViewProps) {
       <Row className="gx-lg-4 gy-4 gy-lg-0">
         <Col md={8} sm={12} className="map-container">
           <ClientOnly fallback={fallback}>
-            <CrimeMap geomPromise={geomPromise} data={coloredData} />
+            <CrimeMap
+              key={`map-${structure?.code ?? "ZA"}`}
+              geomPromise={geomPromise}
+              data={coloredData}
+            />
           </ClientOnly>
         </Col>
         <Col md={4} sm={12}>
