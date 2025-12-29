@@ -138,14 +138,8 @@ function DataLayers({ stations, data, mapRef }: DataLayersProps) {
     }
   }, [stations]);
 
-  // this is a bit of a hack to force re-rendering the layer when data changes
-  const [keyCount, setKeyCount] = useState(0);
-  useEffect(() => {
-    setKeyCount((count) => count + 1);
-  }, [stations, data]);
-
   // Augment stations with color property from data
-  const stationsWithColors: StationCollection | undefined = useMemo(
+  const stationsWithColors: StationCollection = useMemo(
     () =>
       data != null
         ? {
@@ -167,10 +161,21 @@ function DataLayers({ stations, data, mapRef }: DataLayersProps) {
     [stations, data]
   );
 
+  // this is a bit of a hack to force re-rendering the layer when data changes
+  const [keyCount, setKeyCount] = useState(0);
+  useEffect(() => {
+    setKeyCount((count) => count + 1);
+  }, [stationsWithColors]);
+
   return (
-    <Source id="stations" type="geojson" data={stationsWithColors}>
+    <Source
+      key={`data-${keyCount}`}
+      id="stations"
+      type="geojson"
+      data={stationsWithColors}
+    >
       <Layer {...lineLayer} beforeId="label-address-housenumber" />
-      <Layer key={`data-${keyCount}`} {...fillLayer} beforeId="station-lines" />
+      <Layer {...fillLayer} beforeId="station-lines" />
     </Source>
   );
 }
