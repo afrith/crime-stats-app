@@ -5,6 +5,7 @@ import ClientOnly from "~/utils/client-only";
 import type { MapOptions } from "~/utils/map-options";
 import CrimeMap from "~/map/crime-map.client";
 import ControlPane from "./control-pane";
+import { CrimeTable } from "~/station-view/crime-table";
 import Legend from "./legend";
 import SpinnerFill from "~/utils/spinner-fill";
 import { Row, Col } from "react-bootstrap";
@@ -60,6 +61,7 @@ const fallback = (
 
 export default function MapView({
   crimes,
+  stats,
   geomPromise,
 }: Route.ComponentProps["loaderData"]) {
   const [options, setOptions] = useState<MapOptions>({
@@ -130,6 +132,9 @@ export default function MapView({
           )}
         </Col>
       </Row>
+      <div className="pt-4">
+        <CrimeTable crimes={crimes} stats={stats} />
+      </div>
     </main>
   );
 }
