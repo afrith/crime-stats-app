@@ -13,7 +13,7 @@ export function CrimeTable({ crimes, stats }: CrimeTableProps) {
   const sortedCrimes = [...crimes].sort((a, b) => a.sort_order - b.sort_order);
 
   return (
-    <Table striped hover>
+    <Table striped responsive>
       <thead style={{ position: "sticky", top: 0 }}>
         <tr>
           <th>Crime category</th>
