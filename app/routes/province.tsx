@@ -8,16 +8,19 @@ import { getProvinces } from "~/db/structures";
 
 export async function loader({ params }: Route.LoaderArgs) {
   const { provCode } = params;
-  const [provinces, crimes, stats] = await Promise.all([
-    getProvinces({ provCode }),
+  const [crimes, provinces, stats] = await Promise.all([
     getCrimes(),
+    getProvinces(),
     getAnnualStats({ provCode }),
   ]);
-  if (provinces.length === 0) {
+
+  const province = provinces.find((p) => p.prov_code === provCode);
+  if (province == null) {
     throw data("Province Not Found", { status: 404 });
   }
   return {
-    province: provinces[0],
+    province,
+    provinces,
     crimes,
     stats,
     geomPromise: getStationGeometries({ provCode }),

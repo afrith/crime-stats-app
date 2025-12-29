@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { useFetcher } from "react-router";
+import { useFetcher, Link } from "react-router";
 import ClientOnly from "~/utils/client-only";
 
 import type { MapOptions } from "~/utils/map-options";
@@ -16,6 +16,7 @@ import type { CrimeStat } from "~/db/stats";
 import type { StationCollection } from "~/db/stations";
 import type { loader } from "~/routes/stats";
 import { calculateBreakpoints } from "~/utils/breakpoints";
+import type { Province } from "~/db/structures";
 
 // OrRd from colorbrewer2.org
 const colorScheme = {
@@ -63,6 +64,7 @@ const fallback = (
 
 interface MapViewProps {
   crimes: Crime[];
+  provinces: Province[];
   stats: CrimeStat[];
   geomPromise: Promise<StationCollection>;
   structure?: {
@@ -73,7 +75,7 @@ interface MapViewProps {
 }
 
 export default function MapView(props: MapViewProps) {
-  const { crimes, stats, geomPromise, structure } = props;
+  const { crimes, provinces, stats, geomPromise, structure } = props;
   const [options, setOptions] = useState<MapOptions>({
     crimeSlug: "murder",
     year: "2024",
@@ -126,10 +128,32 @@ export default function MapView(props: MapViewProps) {
     return { breakpoints, colors, coloredData };
   }, [fetcher.data?.stats, options.measure]);
 
+  const sortedProvinces = [...provinces].sort((a, b) =>
+    a.prov_name.localeCompare(b.prov_name)
+  );
+
   return (
     <main className="p-3">
       <div>
         <h1>Crime Stats: {structure?.name ?? "South Africa"}</h1>
+      </div>
+      <div className="py-2 text-center">
+        <span className="me-4">
+          {structure == null ? (
+            <strong>South Africa</strong>
+          ) : (
+            <Link to="/">South Africa</Link>
+          )}
+        </span>
+        {sortedProvinces.map((prov) => (
+          <span key={prov.prov_code} className="me-4">
+            {structure?.code === prov.prov_code ? (
+              <strong>{prov.prov_name}</strong>
+            ) : (
+              <Link to={`/province/${prov.prov_code}`}>{prov.prov_name}</Link>
+            )}
+          </span>
+        ))}
       </div>
       <Row className="gx-lg-4 gy-4 gy-lg-0">
         <Col md={8} sm={12} className="map-container">

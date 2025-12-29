@@ -3,15 +3,21 @@ import MapView from "~/map-view";
 import { getStationGeometries } from "~/db/stations";
 import { getCrimes } from "~/db/crimes";
 import { getAnnualStats } from "~/db/stats";
+import { getProvinces } from "~/db/structures";
 
 export function meta({}: Route.MetaArgs) {
   return [{ title: "Crime Stats: South Africa" }];
 }
 
 export async function loader() {
-  const [crimes, stats] = await Promise.all([getCrimes(), getAnnualStats({})]);
+  const [crimes, provinces, stats] = await Promise.all([
+    getCrimes(),
+    getProvinces(),
+    getAnnualStats({}),
+  ]);
   return {
     crimes,
+    provinces,
     stats,
     geomPromise: getStationGeometries(),
   };
