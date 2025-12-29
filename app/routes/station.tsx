@@ -9,7 +9,7 @@ export async function loader({ params }: Route.LoaderArgs) {
   const [station, crimes, stats] = await Promise.all([
     getStationDetails(params.stationSlug),
     getCrimes(),
-    getAnnualStats({ stationSlug: params.stationSlug }),
+    getAnnualStats({ stationSlug: params.stationSlug, groupBy: "station" }),
   ]);
 
   if (station == null) {

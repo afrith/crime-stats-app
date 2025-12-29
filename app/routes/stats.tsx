@@ -4,6 +4,10 @@ import { getAnnualStats } from "~/db/stats";
 
 export async function loader({ params }: Route.LoaderArgs) {
   const { crimeSlug, year } = params;
-  const stats = await getAnnualStats({ crimeSlug, year: parseInt(year) });
+  const stats = await getAnnualStats({
+    crimeSlug,
+    year: parseInt(year),
+    groupBy: "station",
+  });
   return data({ stats });
 }

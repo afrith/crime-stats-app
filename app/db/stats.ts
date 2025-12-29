@@ -1,3 +1,4 @@
+import { group } from "console";
 import { pool } from "./pool.server";
 
 export interface CrimeStat {
@@ -13,6 +14,7 @@ interface Params {
   crimeSlug?: string;
   stationSlug?: string;
   year?: number;
+  groupBy?: "station" | "muni" | "district" | "province";
 }
 
 export async function getAnnualStats(params: Params): Promise<CrimeStat[]> {
@@ -37,6 +39,13 @@ export async function getAnnualStats(params: Params): Promise<CrimeStat[]> {
   const whereClause =
     conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
 
+  const groupBy = params.groupBy;
+  const groupByFields: string[] = ["crime.slug", "crime_stat.year"];
+  if (groupBy === "station") {
+    groupByFields.push("station.slug");
+  }
+  const groupByClause = `GROUP BY ${groupByFields.join(", ")}`;
+
   const client = await pool.connect();
 
   try {
@@ -44,16 +53,15 @@ export async function getAnnualStats(params: Params): Promise<CrimeStat[]> {
       `
       SELECT 
         crime.slug AS "crimeSlug",
-        station.slug AS "stationSlug",
+        ${groupBy === "station" ? 'station.slug AS "stationSlug",' : ""}
         crime_stat.year,
         SUM(crime_stat.crimes)::int AS count,
-        SUM(crime_stat.crimes) * 100000.0 /station.population AS rate,
-        SUM(crime_stat.crimes) / station.area_km2 AS density
+        SUM(crime_stat.crimes * 100000.0 / station.population) AS rate,
+        SUM(crime_stat.crimes / station.area_km2) AS density
       FROM crime_stat JOIN crime ON crime_stat.crime_id = crime.id
                       JOIN station ON crime_stat.station_id = station.id
       ${whereClause}
-      GROUP BY crime.slug, station.slug, station.population, station.area_km2, crime_stat.year
-      ORDER BY crime_stat.year
+      ${groupByClause}
       `,
       values
     );
