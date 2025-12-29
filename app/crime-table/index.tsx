@@ -9,7 +9,7 @@ interface CrimeTableProps {
   stats: CrimeStat[];
 }
 
-export function CrimeTable({ crimes, stats }: CrimeTableProps) {
+export default function CrimeTable({ crimes, stats }: CrimeTableProps) {
   const sortedCrimes = [...crimes].sort((a, b) => a.sort_order - b.sort_order);
 
   return (

@@ -3,7 +3,7 @@ import StationMap from "~/map/station-map.client";
 import ClientOnly from "~/utils/client-only";
 import { Row, Col } from "react-bootstrap";
 import StationInfo from "./station-info";
-import { CrimeTable } from "~/crime-table";
+import CrimeTable from "~/crime-table";
 import { Link } from "react-router";
 
 export default function StationView(props: Route.ComponentProps["loaderData"]) {
