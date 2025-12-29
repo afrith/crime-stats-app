@@ -10,3 +10,9 @@ To build and run in production:
 npm run build
 npm start
 ```
+
+Build and push Docker image:
+
+```sh
+docker buildx build --platform linux/amd64 . -t ghcr.io/afrith/crime-stats-app --push
+```
