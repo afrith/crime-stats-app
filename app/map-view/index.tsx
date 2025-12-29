@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { useFetcher, Link } from "react-router";
+import { useFetcher, Link, useNavigation } from "react-router";
 import ClientOnly from "~/utils/client-only";
 
 import type { MapOptions } from "~/utils/map-options";
@@ -8,7 +8,7 @@ import ControlPane from "./control-pane";
 import CrimeTable from "~/crime-table";
 import Legend from "./legend";
 import SpinnerFill from "~/utils/spinner-fill";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Placeholder } from "react-bootstrap";
 import "./map-view.css";
 
 import type { Crime } from "~/db/crimes";
@@ -75,6 +75,9 @@ export default function MapView(props: MapViewProps) {
     year: "2024",
     measure: "rate",
   });
+
+  const navigation = useNavigation();
+  const isNavigating = Boolean(navigation.location);
 
   const fetcher = useFetcher<typeof loader>();
 
@@ -167,17 +170,33 @@ export default function MapView(props: MapViewProps) {
               setOptions((prev) => ({ ...prev, ...newOptions }))
             }
           />
-          {breakpoints != null && colors != null && (
-            <Legend
-              options={options}
-              breakpoints={breakpoints}
-              colors={colors}
-            />
-          )}
+          <div className="mt-3">
+            <h4>Legend</h4>
+            {isNavigating ||
+            fetcher.state === "loading" ||
+            breakpoints == null ||
+            colors == null ? (
+              <Placeholder as="p" animation="wave" className="mx-2">
+                <Placeholder size="lg" xs={12} />
+              </Placeholder>
+            ) : (
+              <Legend
+                options={options}
+                breakpoints={breakpoints}
+                colors={colors}
+              />
+            )}
+          </div>
         </Col>
       </Row>
       <div className="pt-4">
-        <CrimeTable crimes={crimes} stats={stats} />
+        {isNavigating ? (
+          <Placeholder as="p" animation="wave" className="mx-2">
+            <Placeholder size="lg" xs={12} />
+          </Placeholder>
+        ) : (
+          <CrimeTable crimes={crimes} stats={stats} />
+        )}
       </div>
     </main>
   );
