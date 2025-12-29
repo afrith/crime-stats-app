@@ -11,7 +11,9 @@ import SpinnerFill from "~/utils/spinner-fill";
 import { Row, Col } from "react-bootstrap";
 import "./map-view.css";
 
-import type { Route } from "../routes/+types/home";
+import type { Crime } from "~/db/crimes";
+import type { CrimeStat } from "~/db/stats";
+import type { StationCollection } from "~/db/stations";
 import type { loader } from "~/routes/stats";
 import { calculateBreakpoints } from "~/utils/breakpoints";
 
@@ -59,11 +61,19 @@ const fallback = (
   </SpinnerFill>
 );
 
-export default function MapView({
-  crimes,
-  stats,
-  geomPromise,
-}: Route.ComponentProps["loaderData"]) {
+interface MapViewProps {
+  crimes: Crime[];
+  stats: CrimeStat[];
+  geomPromise: Promise<StationCollection>;
+  structure?: {
+    name: string;
+    type: string;
+    code: string;
+  };
+}
+
+export default function MapView(props: MapViewProps) {
+  const { crimes, stats, geomPromise, structure } = props;
   const [options, setOptions] = useState<MapOptions>({
     crimeSlug: "murder",
     year: "2024",
@@ -76,6 +86,9 @@ export default function MapView({
     const params = new URLSearchParams();
     params.append("crime", options.crimeSlug);
     params.append("year", options.year);
+    if (structure != null) {
+      params.append(structure.type, structure.code);
+    }
     fetcher.load(`/stats/annual?${params.toString()}`);
   }, [options.crimeSlug, options.year, fetcher.load]);
 
@@ -110,7 +123,7 @@ export default function MapView({
   return (
     <main className="p-3">
       <div>
-        <h1>Crime Stats SA</h1>
+        <h1>Crime Stats: {structure?.name ?? "South Africa"}</h1>
       </div>
       <Row className="gx-lg-4 gy-4 gy-lg-0">
         <Col md={8} sm={12} className="map-container">

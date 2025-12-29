@@ -5,7 +5,7 @@ import { getCrimes } from "~/db/crimes";
 import { getAnnualStats } from "~/db/stats";
 
 export function meta({}: Route.MetaArgs) {
-  return [{ title: "Crime Stats SA" }];
+  return [{ title: "Crime Stats: South Africa" }];
 }
 
 export async function loader() {
