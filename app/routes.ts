@@ -10,5 +10,5 @@ export default [
   route("about", "routes/about.tsx"),
   route("province/:provCode", "routes/province.tsx"),
   route("station/:stationSlug", "routes/station.tsx"),
-  ...prefix("stats", [route("annual", "routes/stats.tsx")]),
+  ...prefix("stats", [route("annual", "routes/stats.ts")]),
 ] satisfies RouteConfig;
