@@ -1,6 +1,12 @@
 import { Breadcrumb } from "react-bootstrap";
 import { Link } from "react-router";
 
+export function headers(): HeadersInit {
+  return {
+    "Cache-Control": "public, max-age=86400",
+  };
+}
+
 export function meta({}) {
   return [{ title: "Crime Stats: About this site" }];
 }

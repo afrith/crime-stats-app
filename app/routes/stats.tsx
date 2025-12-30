@@ -2,6 +2,12 @@ import { data } from "react-router";
 import type { Route } from "./+types/stats";
 import { getAnnualStats } from "~/db/stats";
 
+export function headers(): HeadersInit {
+  return {
+    "Cache-Control": "public, max-age=86400",
+  };
+}
+
 export async function loader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url);
   const crimeSlug = url.searchParams.get("crime") ?? undefined;

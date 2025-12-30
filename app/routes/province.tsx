@@ -6,6 +6,12 @@ import { getCrimes } from "~/db/crimes";
 import { getAnnualStats } from "~/db/stats";
 import { getProvinces } from "~/db/structures";
 
+export function headers(): HeadersInit {
+  return {
+    "Cache-Control": "public, max-age=86400",
+  };
+}
+
 export async function loader({ params }: Route.LoaderArgs) {
   const { provCode } = params;
   const [crimes, provinces, stats] = await Promise.all([

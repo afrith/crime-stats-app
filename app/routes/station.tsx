@@ -5,6 +5,12 @@ import { getCrimes } from "~/db/crimes";
 import StationView from "~/station-view";
 import { getAnnualStats } from "~/db/stats";
 
+export function headers(): HeadersInit {
+  return {
+    "Cache-Control": "public, max-age=86400",
+  };
+}
+
 export async function loader({ params }: Route.LoaderArgs) {
   const [station, crimes, stats] = await Promise.all([
     getStationDetails(params.stationSlug),
