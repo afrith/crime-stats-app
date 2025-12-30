@@ -11,6 +11,7 @@ import type { Route } from "./+types/root";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./app.css";
 import Footer from "./footer";
+import { MapOptionsProvider } from "./map-options/options-context";
 
 export const links: Route.LinksFunction = () => [];
 
@@ -24,10 +25,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <div className="container-fluid p-2 min-vh-100 d-flex flex-column">
-          <div className="flex-grow-1">{children}</div>
-          <Footer />
-        </div>
+        <MapOptionsProvider>
+          <div className="container-fluid p-2 min-vh-100 d-flex flex-column">
+            <div className="flex-grow-1">{children}</div>
+            <Footer />
+          </div>
+        </MapOptionsProvider>
         <ScrollRestoration />
         <Scripts />
       </body>

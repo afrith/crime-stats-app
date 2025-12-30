@@ -1,14 +1,14 @@
 import { Table } from "react-bootstrap";
-import { type MapOptions } from "~/map-options";
+import { useMapOptions } from "~/map-options/options-context";
 import { formatInt, formatFloat } from "~/utils/format";
 
 interface LegendProps {
-  options: MapOptions;
   colors: string[];
   breakpoints: number[];
 }
 
-export default function Legend({ options, colors, breakpoints }: LegendProps) {
+export default function Legend({ colors, breakpoints }: LegendProps) {
+  const { options } = useMapOptions();
   return (
     <Table style={{ width: "auto" }}>
       <tbody>

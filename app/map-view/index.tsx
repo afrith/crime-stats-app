@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useFetcher, useNavigation, Link } from "react-router";
 import ClientOnly from "~/utils/client-only";
 
-import type { MapOptions } from "~/map-options";
+import { useMapOptions } from "~/map-options/options-context";
 import CrimeMap from "~/map/crime-map.client";
 import ControlPane from "./control-pane";
 import CrimeTable from "~/crime-table";
@@ -71,11 +71,7 @@ interface MapViewProps {
 
 export default function MapView(props: MapViewProps) {
   const { crimes, provinces, stats, geomPromise, structure } = props;
-  const [options, setOptions] = useState<MapOptions>({
-    crimeSlug: "murder",
-    year: "2024",
-    measure: "rate",
-  });
+  const { options, setOptions } = useMapOptions();
 
   const navigation = useNavigation();
   const isNavigating = Boolean(navigation.location);
@@ -146,13 +142,7 @@ export default function MapView(props: MapViewProps) {
           </ClientOnly>
         </Col>
         <Col md={4} sm={12}>
-          <ControlPane
-            crimes={crimes}
-            options={options}
-            onOptionsChange={(newOptions) =>
-              setOptions((prev) => ({ ...prev, ...newOptions }))
-            }
-          />
+          <ControlPane crimes={crimes} />
           <div className="mt-3">
             <h4>Legend</h4>
             {isNavigating ||
@@ -163,11 +153,7 @@ export default function MapView(props: MapViewProps) {
                 <Placeholder size="lg" xs={12} />
               </Placeholder>
             ) : (
-              <Legend
-                options={options}
-                breakpoints={breakpoints}
-                colors={colors}
-              />
+              <Legend breakpoints={breakpoints} colors={colors} />
             )}
           </div>
         </Col>

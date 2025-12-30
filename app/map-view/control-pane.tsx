@@ -8,18 +8,14 @@ import {
   measureOptions,
   measureLabels,
 } from "~/map-options";
+import { useMapOptions } from "~/map-options/options-context";
 
 interface ControlPaneProps {
   crimes: Crime[];
-  options: MapOptions;
-  onOptionsChange: (options: Partial<MapOptions>) => void;
 }
 
-export default function ControlPane({
-  crimes,
-  options,
-  onOptionsChange,
-}: ControlPaneProps) {
+export default function ControlPane({ crimes }: ControlPaneProps) {
+  const { options, setOptions } = useMapOptions();
   return (
     <Form>
       <Form.Group controlId="crimeSelect" className="mt-2">
@@ -27,7 +23,7 @@ export default function ControlPane({
         <CrimeSelect
           crimes={crimes}
           selectedCrime={options.crimeSlug}
-          onSelect={(crimeSlug) => onOptionsChange({ crimeSlug })}
+          onSelect={(crimeSlug) => setOptions({ ...options, crimeSlug })}
         />
       </Form.Group>
 
@@ -36,7 +32,10 @@ export default function ControlPane({
         <Form.Select
           value={options.year}
           onChange={(e) =>
-            onOptionsChange({ year: e.target.value as MapOptions["year"] })
+            setOptions({
+              ...options,
+              year: e.target.value as MapOptions["year"],
+            })
           }
         >
           {yearOptions.map((year) => (
@@ -52,7 +51,8 @@ export default function ControlPane({
         <Form.Select
           value={options.measure}
           onChange={(e) =>
-            onOptionsChange({
+            setOptions({
+              ...options,
               measure: e.target.value as MapOptions["measure"],
             })
           }
