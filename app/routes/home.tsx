@@ -3,6 +3,7 @@ import MapView from "~/map-view";
 import { getCrimes } from "~/db/crimes";
 import { getAnnualStats } from "~/db/stats";
 import { getProvinces } from "~/db/structures";
+import { makeMetaTags } from "~/utils/meta-tags";
 
 export function headers(): HeadersInit {
   return {
@@ -10,8 +11,12 @@ export function headers(): HeadersInit {
   };
 }
 
-export function meta({}: Route.MetaArgs) {
-  return [{ title: "Crime Stats: South Africa" }];
+export function meta({ location }: Route.MetaArgs) {
+  return makeMetaTags({
+    title: "Crime Stats: South Africa",
+    description: "Crime statistics for South Africa with interactive maps",
+    pathname: location.pathname,
+  });
 }
 
 export async function loader() {

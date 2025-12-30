@@ -4,6 +4,7 @@ import MapView from "~/map-view";
 import { getCrimes } from "~/db/crimes";
 import { getAnnualStats } from "~/db/stats";
 import { getProvinces } from "~/db/structures";
+import { makeMetaTags } from "~/utils/meta-tags";
 
 export function headers(): HeadersInit {
   return {
@@ -31,8 +32,12 @@ export async function loader({ params }: Route.LoaderArgs) {
   };
 }
 
-export function meta({ loaderData }: Route.MetaArgs) {
-  return [{ title: `Crime Stats: ${loaderData.province.prov_name}` }];
+export function meta({ location, loaderData }: Route.MetaArgs) {
+  return makeMetaTags({
+    title: `Crime Stats: ${loaderData.province.prov_name}`,
+    description: `Crime statistics for ${loaderData.province.prov_name} with interactive maps`,
+    pathname: location.pathname,
+  });
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {

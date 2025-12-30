@@ -1,5 +1,7 @@
+import type { Route } from "./+types/about";
 import { Breadcrumb } from "react-bootstrap";
 import { Link } from "react-router";
+import { makeMetaTags } from "~/utils/meta-tags";
 
 export function headers(): HeadersInit {
   return {
@@ -7,8 +9,12 @@ export function headers(): HeadersInit {
   };
 }
 
-export function meta({}) {
-  return [{ title: "Crime Stats: About this site" }];
+export function meta({ location }: Route.MetaArgs) {
+  return makeMetaTags({
+    title: "Crime Stats: About this site",
+    description: "Crime statistics for South Africa with interactive maps",
+    pathname: location.pathname,
+  });
 }
 
 export default function About() {
