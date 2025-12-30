@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { useFetcher, useNavigation } from "react-router";
+import { useFetcher, useNavigation, Link } from "react-router";
 import ClientOnly from "~/utils/client-only";
 
 import type { MapOptions } from "~/utils/map-options";
@@ -128,8 +128,9 @@ export default function MapView(props: MapViewProps) {
 
   return (
     <main>
-      <div>
+      <div className="d-flex justify-content-between align-items-top flex-wrap-reverse">
         <h1>Crime Stats: {structure?.name ?? "South Africa"}</h1>
+        <Link to="/about">About this site</Link>
       </div>
       <div className="py-2">
         <ProvinceList provinces={provinces} currentCode={structure?.code} />

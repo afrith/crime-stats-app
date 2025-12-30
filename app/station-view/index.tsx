@@ -11,18 +11,21 @@ export default function StationView(props: Route.ComponentProps["loaderData"]) {
   const { name, former_name, prov_code, prov_name } = station.properties;
   return (
     <main>
-      <Breadcrumb>
-        <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/" }}>
-          Home
-        </Breadcrumb.Item>
-        <Breadcrumb.Item
-          linkAs={Link}
-          linkProps={{ to: `/province/${prov_code}` }}
-        >
-          {prov_name}
-        </Breadcrumb.Item>
-        <Breadcrumb.Item active>{name}</Breadcrumb.Item>
-      </Breadcrumb>
+      <div className="d-flex justify-content-between align-items-top flex-wrap-reverse">
+        <Breadcrumb>
+          <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/" }}>
+            Home
+          </Breadcrumb.Item>
+          <Breadcrumb.Item
+            linkAs={Link}
+            linkProps={{ to: `/province/${prov_code}` }}
+          >
+            {prov_name}
+          </Breadcrumb.Item>
+          <Breadcrumb.Item active>{name}</Breadcrumb.Item>
+        </Breadcrumb>
+        <Link to="/about">About this site</Link>
+      </div>
       <h2>
         Crime Stats for {name}
         {former_name && (
