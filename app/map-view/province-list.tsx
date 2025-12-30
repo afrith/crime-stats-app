@@ -32,15 +32,13 @@ export default function ProvinceList({
         )}
       </div>
       {sortedProvinces.map((prov) => (
-        <>
-          <div key={prov.prov_code} className="text-nowrap">
-            {currentCode === prov.prov_code ? (
-              <strong>{prov.prov_name}</strong>
-            ) : (
-              <Link to={`/province/${prov.prov_code}`}>{prov.prov_name}</Link>
-            )}
-          </div>
-        </>
+        <div key={prov.prov_code} className="text-nowrap">
+          {currentCode === prov.prov_code ? (
+            <strong>{prov.prov_name}</strong>
+          ) : (
+            <Link to={`/province/${prov.prov_code}`}>{prov.prov_name}</Link>
+          )}
+        </div>
       ))}
     </div>
   );
