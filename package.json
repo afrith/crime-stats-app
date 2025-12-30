@@ -6,7 +6,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "react-router build",
+    "build": "dotenv -- react-router build",
     "dev": "dotenv -- react-router dev --port 3000",
     "start": "PORT=3000 react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc"
