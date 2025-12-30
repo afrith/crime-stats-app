@@ -6,7 +6,7 @@ import { getProvinces } from "~/db/structures";
 
 export function headers(): HeadersInit {
   return {
-    "Cache-Control": "public, max-age=86400",
+    "Cache-Control": "public, max-age=600",
   };
 }
 

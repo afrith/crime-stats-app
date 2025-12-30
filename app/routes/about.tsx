@@ -3,7 +3,7 @@ import { Link } from "react-router";
 
 export function headers(): HeadersInit {
   return {
-    "Cache-Control": "public, max-age=86400",
+    "Cache-Control": "public, max-age=600",
   };
 }
 

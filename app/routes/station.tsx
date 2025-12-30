@@ -7,7 +7,7 @@ import { getAnnualStats } from "~/db/stats";
 
 export function headers(): HeadersInit {
   return {
-    "Cache-Control": "public, max-age=86400",
+    "Cache-Control": "public, max-age=600",
   };
 }
 
