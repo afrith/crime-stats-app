@@ -40,11 +40,11 @@ export default function StationView(props: Route.ComponentProps["loaderData"]) {
             </ClientOnly>
           </div>
         </Col>
-        <Col sm={12} md={4}>
+        <Col sm={12} md={4} className="mt-3 mt-md-0">
           <StationInfo station={station.properties} />
         </Col>
       </Row>
-      <div className="pt-4">
+      <div className="pt-2">
         <CrimeTable crimes={crimes} stats={stats} />
       </div>
     </main>
