@@ -22,7 +22,7 @@ export default function ControlPane({
 }: ControlPaneProps) {
   return (
     <Form>
-      <Form.Group controlId="crimeSelect">
+      <Form.Group controlId="crimeSelect" className="mt-2">
         <Form.Label>Crime category:</Form.Label>
         <CrimeSelect
           crimes={crimes}
@@ -31,7 +31,7 @@ export default function ControlPane({
         />
       </Form.Group>
 
-      <Form.Group controlId="yearSelect">
+      <Form.Group controlId="yearSelect" className="mt-2">
         <Form.Label>Year:</Form.Label>
         <Form.Select
           value={options.year}
@@ -47,7 +47,7 @@ export default function ControlPane({
         </Form.Select>
       </Form.Group>
 
-      <Form.Group controlId="measureSelect">
+      <Form.Group controlId="measureSelect" className="mt-2">
         <Form.Label>Measure:</Form.Label>
         <Form.Select
           value={options.measure}
