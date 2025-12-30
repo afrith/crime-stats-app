@@ -7,7 +7,7 @@ import {
   yearLabels,
   measureOptions,
   measureLabels,
-} from "~/utils/map-options";
+} from "~/map-options";
 
 interface ControlPaneProps {
   crimes: Crime[];

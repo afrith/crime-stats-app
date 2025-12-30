@@ -1,5 +1,5 @@
 import { Table } from "react-bootstrap";
-import { type MapOptions } from "~/utils/map-options";
+import { type MapOptions } from "~/map-options";
 import { formatInt, formatFloat } from "~/utils/format";
 
 interface LegendProps {

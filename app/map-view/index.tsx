@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useFetcher, useNavigation, Link } from "react-router";
 import ClientOnly from "~/utils/client-only";
 
-import type { MapOptions } from "~/utils/map-options";
+import type { MapOptions } from "~/map-options";
 import CrimeMap from "~/map/crime-map.client";
 import ControlPane from "./control-pane";
 import CrimeTable from "~/crime-table";

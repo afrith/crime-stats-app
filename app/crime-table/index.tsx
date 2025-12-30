@@ -2,7 +2,7 @@ import { Table } from "react-bootstrap";
 import type { Crime } from "~/db/crimes";
 import type { CrimeStat } from "~/db/stats";
 import { formatInt } from "~/utils/format";
-import { yearOptions, yearLabels } from "~/utils/map-options";
+import { yearOptions, yearLabels } from "~/map-options";
 
 interface CrimeTableProps {
   crimes: Crime[];
