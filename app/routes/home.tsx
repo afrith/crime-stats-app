@@ -1,6 +1,5 @@
 import type { Route } from "./+types/home";
 import MapView from "~/map-view";
-import { getStationGeometries } from "~/db/stations";
 import { getCrimes } from "~/db/crimes";
 import { getAnnualStats } from "~/db/stats";
 import { getProvinces } from "~/db/structures";
@@ -25,7 +24,6 @@ export async function loader() {
     crimes,
     provinces,
     stats,
-    geomPromise: getStationGeometries(),
   };
 }
 

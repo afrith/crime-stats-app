@@ -1,12 +1,5 @@
-import {
-  Suspense,
-  useCallback,
-  useEffect,
-  useState,
-  useRef,
-  useMemo,
-} from "react";
-import { Await, useNavigation } from "react-router";
+import { useCallback, useEffect, useState, useRef, useMemo } from "react";
+import { useNavigation } from "react-router";
 import Map, {
   type MapRef,
   Layer,
@@ -28,7 +21,8 @@ interface ColoredStat extends CrimeStat {
 }
 
 interface CrimeMapProps {
-  geomPromise: Promise<StationCollection>;
+  geometry?: StationCollection;
+  isLoading?: boolean;
   data?: ColoredStat[];
   onClick?: (station?: StationFeature) => void;
 }
@@ -67,7 +61,8 @@ interface ClickData {
   longitude: number;
 }
 
-function CrimeMap({ geomPromise, data, onClick }: CrimeMapProps) {
+function CrimeMap(props: CrimeMapProps) {
+  const { geometry, isLoading = false, data, onClick } = props;
   const mapRef = useRef<MapRef>(null);
 
   // handle clicking on map features
@@ -107,16 +102,10 @@ function CrimeMap({ geomPromise, data, onClick }: CrimeMapProps) {
       onClick={handleClick}
       interactiveLayerIds={interactiveLayerIds}
     >
-      {isNavigating ? (
+      {isNavigating || isLoading || geometry == null ? (
         <SpinnerFill />
       ) : (
-        <Suspense fallback={<SpinnerFill />}>
-          <Await resolve={geomPromise}>
-            {(stations) => (
-              <DataLayers stations={stations} data={data} mapRef={mapRef} />
-            )}
-          </Await>
-        </Suspense>
+        <DataLayers stations={geometry} data={data} mapRef={mapRef} />
       )}
       {clicked != null && <StationPopup {...clicked} />}
     </Map>

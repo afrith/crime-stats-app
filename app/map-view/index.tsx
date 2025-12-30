@@ -15,7 +15,8 @@ import "./map-view.css";
 import type { Crime } from "~/db/crimes";
 import type { CrimeStat } from "~/db/stats";
 import type { StationCollection } from "~/db/stations";
-import type { loader } from "~/routes/stats";
+import type { loader as statsLoader } from "~/routes/stats";
+import type { loader as geomLoader } from "~/routes/geom";
 import { calculateBreakpoints } from "~/utils/breakpoints";
 import type { Province } from "~/db/structures";
 
@@ -61,7 +62,6 @@ interface MapViewProps {
   crimes: Crime[];
   provinces: Province[];
   stats: CrimeStat[];
-  geomPromise: Promise<StationCollection>;
   structure?: {
     name: string;
     type: string;
@@ -70,13 +70,22 @@ interface MapViewProps {
 }
 
 export default function MapView(props: MapViewProps) {
-  const { crimes, provinces, stats, geomPromise, structure } = props;
+  const { crimes, provinces, stats, structure } = props;
   const { options, setOptions } = useMapOptions();
 
   const navigation = useNavigation();
   const isNavigating = Boolean(navigation.location);
 
-  const fetcher = useFetcher<typeof loader>();
+  const statsFetcher = useFetcher<typeof statsLoader>();
+  const geomFetcher = useFetcher<typeof geomLoader>();
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (structure != null) {
+      params.append(structure.type, structure.code);
+    }
+    geomFetcher.load(`/geom?${params.toString()}`);
+  }, [structure?.type, structure?.code, geomFetcher.load]);
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -85,21 +94,21 @@ export default function MapView(props: MapViewProps) {
     if (structure != null) {
       params.append(structure.type, structure.code);
     }
-    fetcher.load(`/stats/annual?${params.toString()}`);
+    statsFetcher.load(`/stats/annual?${params.toString()}`);
   }, [
     options.crimeSlug,
     options.year,
     structure?.type,
     structure?.code,
-    fetcher.load,
+    statsFetcher.load,
   ]);
 
   const { breakpoints, colors, coloredData } = useMemo(() => {
-    if (fetcher.data?.stats == null) {
+    if (statsFetcher.data?.stats == null) {
       return { breakpoints: undefined, colors: undefined };
     }
     const breakpoints = calculateBreakpoints(
-      fetcher.data.stats.map((x) => x[options.measure]),
+      statsFetcher.data.stats.map((x) => x[options.measure]),
       8
     );
     const colors =
@@ -114,13 +123,13 @@ export default function MapView(props: MapViewProps) {
       return colors[colors.length - 1];
     };
 
-    const coloredData = fetcher.data.stats.map((stat) => ({
+    const coloredData = statsFetcher.data.stats.map((stat) => ({
       ...stat,
       color: colorFn(stat[options.measure]) ?? "#ffffff",
     }));
 
     return { breakpoints, colors, coloredData };
-  }, [fetcher.data?.stats, options.measure]);
+  }, [statsFetcher.data?.stats, options.measure]);
 
   return (
     <main>
@@ -136,7 +145,8 @@ export default function MapView(props: MapViewProps) {
           <ClientOnly fallback={<SpinnerFill />}>
             <CrimeMap
               key={`map-${structure?.code ?? "ZA"}`}
-              geomPromise={geomPromise}
+              geometry={geomFetcher.data?.geometry}
+              isLoading={geomFetcher.state === "loading"}
               data={coloredData}
             />
           </ClientOnly>
@@ -146,7 +156,7 @@ export default function MapView(props: MapViewProps) {
           <div className="mt-3">
             <h4>Legend</h4>
             {isNavigating ||
-            fetcher.state === "loading" ||
+            statsFetcher.state === "loading" ||
             breakpoints == null ||
             colors == null ? (
               <Placeholder as="p" animation="wave" className="mx-2">
