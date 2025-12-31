@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useFetcher, useNavigation, Link } from "react-router";
 import ClientOnly from "~/utils/client-only";
 
@@ -63,7 +63,7 @@ interface MapViewProps {
   crimes: Crime[];
   provinces: Province[];
   stats: CrimeStat[];
-  stations?: Station[];
+  stations: Station[];
   structure?: {
     name: string;
     type: string;
@@ -73,7 +73,7 @@ interface MapViewProps {
 
 export default function MapView(props: MapViewProps) {
   const { crimes, provinces, stats, structure, stations } = props;
-  const { options, setOptions } = useMapOptions();
+  const { options } = useMapOptions();
 
   const navigation = useNavigation();
   const isNavigating = Boolean(navigation.location);
@@ -133,6 +133,19 @@ export default function MapView(props: MapViewProps) {
     return { breakpoints, colors, coloredData };
   }, [statsFetcher.data?.stats, options.measure]);
 
+  const [population, area_km2] = useMemo(
+    () =>
+      stations.reduce(
+        (acc, station) => {
+          acc[0] += station.population ?? 0;
+          acc[1] += station.area_km2 ?? 0;
+          return acc;
+        },
+        [0, 0]
+      ),
+    [stations]
+  );
+
   return (
     <main>
       <div className="d-flex justify-content-between align-items-top flex-wrap-reverse">
@@ -142,7 +155,7 @@ export default function MapView(props: MapViewProps) {
       <div className="py-2">
         <ProvinceList provinces={provinces} currentCode={structure?.code} />
       </div>
-      <Row className="gx-lg-4 gy-4 gy-lg-0">
+      <Row className="gx-lg-4 gy-4 gy-lg-0 pt-2">
         <Col md={8} sm={12} className="map-container">
           <ClientOnly fallback={<SpinnerFill />}>
             <CrimeMap
@@ -174,14 +187,19 @@ export default function MapView(props: MapViewProps) {
           </div>
         </Col>
       </Row>
-      <div className="pt-4">
+      <div>
         <h4>Crime totals</h4>
         {isNavigating ? (
           <Placeholder as="p" animation="wave" className="mx-2">
             <Placeholder size="lg" xs={12} />
           </Placeholder>
         ) : (
-          <CrimeTable crimes={crimes} stats={stats} />
+          <CrimeTable
+            crimes={crimes}
+            stats={stats}
+            population={population}
+            area_km2={area_km2}
+          />
         )}
       </div>
     </main>

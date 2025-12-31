@@ -8,7 +8,8 @@ import { Link } from "react-router";
 
 export default function StationView(props: Route.ComponentProps["loaderData"]) {
   const { station, crimes, stats } = props;
-  const { name, former_name, prov_code, prov_name } = station.properties;
+  const { name, former_name, prov_code, prov_name, population, area_km2 } =
+    station.properties;
   return (
     <main>
       <div className="d-flex justify-content-between align-items-top flex-wrap-reverse">
@@ -45,7 +46,13 @@ export default function StationView(props: Route.ComponentProps["loaderData"]) {
         </Col>
       </Row>
       <div className="pt-2">
-        <CrimeTable crimes={crimes} stats={stats} />
+        <h3>Crime statistics</h3>
+        <CrimeTable
+          crimes={crimes}
+          stats={stats}
+          population={population}
+          area_km2={area_km2}
+        />
       </div>
     </main>
   );
