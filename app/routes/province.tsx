@@ -5,6 +5,7 @@ import { getCrimes } from "~/db/crimes";
 import { getAnnualStats } from "~/db/stats";
 import { getProvinces } from "~/db/structures";
 import { makeMetaTags } from "~/utils/meta-tags";
+import { getStations } from "~/db/stations";
 
 export function headers(): HeadersInit {
   return {
@@ -14,10 +15,11 @@ export function headers(): HeadersInit {
 
 export async function loader({ params }: Route.LoaderArgs) {
   const { provCode } = params;
-  const [crimes, provinces, stats] = await Promise.all([
+  const [crimes, provinces, stats, stations] = await Promise.all([
     getCrimes(),
     getProvinces(),
     getAnnualStats({ provCode }),
+    getStations({ provCode }),
   ]);
 
   const province = provinces.find((p) => p.prov_code === provCode);
@@ -29,6 +31,7 @@ export async function loader({ params }: Route.LoaderArgs) {
     provinces,
     crimes,
     stats,
+    stations,
   };
 }
 

@@ -14,11 +14,12 @@ import "./map-view.css";
 
 import type { Crime } from "~/db/crimes";
 import type { CrimeStat } from "~/db/stats";
-import type { StationCollection } from "~/db/stations";
+import type { Station } from "~/db/stations";
 import type { loader as statsLoader } from "~/routes/stats";
 import type { loader as geomLoader } from "~/routes/geom";
 import { calculateBreakpoints } from "~/utils/breakpoints";
 import type { Province } from "~/db/structures";
+import StationDropdown from "./station-dropdown";
 
 // OrRd from colorbrewer2.org
 const colorScheme = {
@@ -62,6 +63,7 @@ interface MapViewProps {
   crimes: Crime[];
   provinces: Province[];
   stats: CrimeStat[];
+  stations?: Station[];
   structure?: {
     name: string;
     type: string;
@@ -70,7 +72,7 @@ interface MapViewProps {
 }
 
 export default function MapView(props: MapViewProps) {
-  const { crimes, provinces, stats, structure } = props;
+  const { crimes, provinces, stats, structure, stations } = props;
   const { options, setOptions } = useMapOptions();
 
   const navigation = useNavigation();
@@ -169,7 +171,10 @@ export default function MapView(props: MapViewProps) {
         </Col>
       </Row>
       <div className="pt-4">
-        <h4>Crime totals</h4>
+        <div className="d-flex flex-row justify-content-between align-items-baseline flex-wrap">
+          <h4>Crime totals</h4>
+          {stations != null && <StationDropdown stations={stations} />}
+        </div>
         {isNavigating ? (
           <Placeholder as="p" animation="wave" className="mx-2">
             <Placeholder size="lg" xs={12} />

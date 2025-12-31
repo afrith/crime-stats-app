@@ -4,6 +4,7 @@ import { getCrimes } from "~/db/crimes";
 import { getAnnualStats } from "~/db/stats";
 import { getProvinces } from "~/db/structures";
 import { makeMetaTags } from "~/utils/meta-tags";
+import { getStations } from "~/db/stations";
 
 export function headers(): HeadersInit {
   return {
@@ -20,15 +21,17 @@ export function meta({ location }: Route.MetaArgs) {
 }
 
 export async function loader() {
-  const [crimes, provinces, stats] = await Promise.all([
+  const [crimes, provinces, stats, stations] = await Promise.all([
     getCrimes(),
     getProvinces(),
     getAnnualStats({}),
+    getStations(),
   ]);
   return {
     crimes,
     provinces,
     stats,
+    stations,
   };
 }
 
