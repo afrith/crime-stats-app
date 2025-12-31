@@ -1,14 +1,9 @@
 import { Form } from "react-bootstrap";
 import CrimeSelect from "./crime-select";
 import type { Crime } from "~/db/crimes";
-import {
-  type MapOptions,
-  yearOptions,
-  yearLabels,
-  measureOptions,
-  measureLabels,
-} from "~/map-options";
+import { type MapOptions, yearOptions, yearLabels } from "~/map-options";
 import { useMapOptions } from "~/map-options/options-context";
+import MeasureSelect from "~/map-options/measure-select";
 
 interface ControlPaneProps {
   crimes: Crime[];
@@ -48,21 +43,10 @@ export default function ControlPane({ crimes }: ControlPaneProps) {
 
       <Form.Group controlId="measureSelect" className="mt-2">
         <Form.Label>Measure:</Form.Label>
-        <Form.Select
-          value={options.measure}
-          onChange={(e) =>
-            setOptions({
-              ...options,
-              measure: e.target.value as MapOptions["measure"],
-            })
-          }
-        >
-          {measureOptions.map((measure) => (
-            <option key={measure} value={measure}>
-              {measureLabels[measure]}
-            </option>
-          ))}
-        </Form.Select>
+        <MeasureSelect
+          measure={options.measure}
+          onChange={(measure) => setOptions({ ...options, measure })}
+        />
       </Form.Group>
     </Form>
   );
