@@ -5,6 +5,7 @@ import { Breadcrumb, Row, Col } from "react-bootstrap";
 import StationInfo from "./station-info";
 import CrimeTable from "~/crime-table";
 import { Link } from "react-router";
+import { LinkContainer } from "react-router-bootstrap";
 
 export default function StationView(props: Route.ComponentProps["loaderData"]) {
   const { station, crimes, stats } = props;
@@ -13,15 +14,12 @@ export default function StationView(props: Route.ComponentProps["loaderData"]) {
     <main>
       <div className="d-flex justify-content-between align-items-top flex-wrap-reverse">
         <Breadcrumb>
-          <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/" }}>
-            Home
-          </Breadcrumb.Item>
-          <Breadcrumb.Item
-            linkAs={Link}
-            linkProps={{ to: `/province/${prov_code}` }}
-          >
-            {prov_name}
-          </Breadcrumb.Item>
+          <LinkContainer to="/">
+            <Breadcrumb.Item>Home</Breadcrumb.Item>
+          </LinkContainer>
+          <LinkContainer to={`/province/${prov_code}`}>
+            <Breadcrumb.Item>{prov_name}</Breadcrumb.Item>
+          </LinkContainer>
           <Breadcrumb.Item active>{name}</Breadcrumb.Item>
         </Breadcrumb>
         <Link to="/about">About this site</Link>

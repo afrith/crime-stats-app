@@ -1,6 +1,7 @@
 import type { Route } from "./+types/about";
 import { Breadcrumb } from "react-bootstrap";
 import { Link } from "react-router";
+import { LinkContainer } from "react-router-bootstrap";
 import { makeMetaTags } from "~/utils/meta-tags";
 
 export function headers(): HeadersInit {
@@ -21,9 +22,9 @@ export default function About() {
   return (
     <main className="container">
       <Breadcrumb>
-        <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/" }}>
-          Home
-        </Breadcrumb.Item>
+        <LinkContainer to="/">
+          <Breadcrumb.Item>Home</Breadcrumb.Item>
+        </LinkContainer>
         <Breadcrumb.Item active>About</Breadcrumb.Item>
       </Breadcrumb>
       <h1>About this site</h1>
