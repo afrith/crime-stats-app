@@ -12,4 +12,5 @@ export default [
   route("geom", "routes/geom.ts"),
   route("station/:stationSlug", "routes/station.tsx"),
   ...prefix("stats", [route("annual", "routes/stats.ts")]),
+  route("/sitemap.xml", "routes/sitemap.ts"),
 ] satisfies RouteConfig;
