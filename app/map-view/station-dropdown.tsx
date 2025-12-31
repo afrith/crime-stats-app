@@ -27,7 +27,7 @@ export default function StationDropdown({ stations }: StationDropdownProps) {
         id="dropdown-drilldown"
         className="w-100"
       >
-        Find a police station
+        View stats for a station
       </Dropdown.Toggle>
       <Dropdown.Menu className="w-100">
         <Dropdown.ItemText>
