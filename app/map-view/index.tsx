@@ -154,9 +154,13 @@ export default function MapView(props: MapViewProps) {
           </ClientOnly>
         </Col>
         <Col md={4} sm={12}>
-          <ControlPane crimes={crimes} />
+          {stations != null && <StationDropdown stations={stations} />}
           <div className="mt-3">
-            <h4>Legend</h4>
+            <h5>Map options</h5>
+            <ControlPane crimes={crimes} />
+          </div>
+          <div className="mt-3">
+            <h5>Legend</h5>
             {isNavigating ||
             statsFetcher.state === "loading" ||
             breakpoints == null ||
@@ -171,10 +175,7 @@ export default function MapView(props: MapViewProps) {
         </Col>
       </Row>
       <div className="pt-4">
-        <div className="d-flex flex-row justify-content-between align-items-baseline flex-wrap">
-          <h4>Crime totals</h4>
-          {stations != null && <StationDropdown stations={stations} />}
-        </div>
+        <h4>Crime totals</h4>
         {isNavigating ? (
           <Placeholder as="p" animation="wave" className="mx-2">
             <Placeholder size="lg" xs={12} />

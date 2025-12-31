@@ -25,16 +25,11 @@ export default function StationDropdown({ stations }: StationDropdownProps) {
       <Dropdown.Toggle
         variant="primary"
         id="dropdown-drilldown"
-        style={{ minWidth: "200px" }}
+        className="w-100"
       >
         Find a police station
       </Dropdown.Toggle>
-      <Dropdown.Menu
-        style={{
-          maxHeight: "500px",
-          overflowY: "auto",
-        }}
-      >
+      <Dropdown.Menu className="w-100">
         <Dropdown.ItemText>
           <FormControl
             type="text"
@@ -44,11 +39,13 @@ export default function StationDropdown({ stations }: StationDropdownProps) {
           ></FormControl>
         </Dropdown.ItemText>
         <Dropdown.Divider />
-        {filteredStations.map((station) => (
-          <LinkContainer to={`/station/${station.slug}`} key={station.slug}>
-            <Dropdown.Item>{station.name}</Dropdown.Item>
-          </LinkContainer>
-        ))}
+        <div style={{ maxHeight: "400px", overflowY: "scroll" }}>
+          {filteredStations.map((station) => (
+            <LinkContainer to={`/station/${station.slug}`} key={station.slug}>
+              <Dropdown.Item>{station.name}</Dropdown.Item>
+            </LinkContainer>
+          ))}
+        </div>
       </Dropdown.Menu>
     </Dropdown>
   );
